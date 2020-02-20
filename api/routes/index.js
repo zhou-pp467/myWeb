@@ -1,5 +1,43 @@
 import express from 'express'
 const router = express.Router()
+var multer = require('multer')
+const path = require('path')
+let upload = multer({
+  storage: multer.diskStorage({
+    //设置文件存储位置
+    destination: path.join(__dirname, '../public/images/'),
+    //设置文件名称
+    filename: function(req, file, cb) {
+      let fileName =
+        file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+      //fileName就是上传文件的文件名
+      cb(null, fileName)
+    }
+  }),
+  fileFilter: function(req, file, cb) {
+    let ext = path.extname(file.originalname)
+    let extArr = [
+      '.jpg',
+      '.jpeg',
+      '.gif',
+      '.png',
+      '.BMP',
+      '.JPG',
+      '.JPEG',
+      '.PNG',
+      '.GIF'
+    ]
+    if (!extArr.includes(ext)) {
+      //拒绝这个文件
+      //cb(null, false);
+      //当然我们还可以发送一个错误
+      cb(new Error('扩展名不正确'))
+    }
+
+    //接受这个文件
+    cb(null, true)
+  }
+})
 
 //登录 0:fail; 1:success
 router.post('/login', (req, res, next) => {
@@ -118,10 +156,71 @@ router.get('/getPhotosByMonth', (req, res, next) => {
 })
 
 //编辑照片详情
-router.post('/editPhotoDetail', (req, res, next) => {})
+router.post('/editPhotoDetail', (req, res, next) => {
+  if (
+    req.session.username === 'daidai' ||
+    req.session.username === req.body.user_name
+  ) {
+    //连接数据库
+    let mysql = require('mysql')
+    let connection = mysql.createConnection({
+      host: '156.67.222.213',
+      user: 'u247080489_zhou_pp467',
+      password: '542641',
+      database: 'u247080489_myWeb'
+    })
+    let picture_Id = req.body.picture_Id
+    let picture_description = req.body.picture_description
+    const sql = `update pictures set picture_description = '${picture_description}' where picture_Id='${picture_Id}'`
+    connection.query(sql, (err, result) => {
+      if (err) {
+        res.send(err)
+      } else {
+        let data = result
+        res.send(data)
+      }
+    })
+    connection.end()
+  } else {
+    res.send({ status: 0 })
+  }
+})
 
 // 上传照片及详情
-router.post('/uploadPhoto', (req, res, next) => {})
+router.post('/uploadPhoto', upload.single('photo'), (req, res, next) => {
+  if (req.session.username) {
+    //连接数据库
+    let mysql = require('mysql')
+    let connection = mysql.createConnection({
+      host: '156.67.222.213',
+      user: 'u247080489_zhou_pp467',
+      password: '542641',
+      database: 'u247080489_myWeb'
+    })
+    console.log(req.file.path)
+    let picture_Id = +new Date()
+    let upload_time = req.body.upload_time
+    let user_name = req.body.user_name
+    let picture_size = req.body.picture_size
+    let picture_description = req.body.picture_description
+    let taken_time = req.body.taken_time
+    const reg = /\\/g
+    let picture_content = req.file.path.replace(reg, '/')
+    let sort_name = req.body.sort_name
+    const sql = `insert into pictures (picture_Id,upload_time,user_name,picture_size,picture_description,taken_time,picture_content,sort_name) values ('${picture_Id}','${upload_time}','${user_name}','${picture_size}','${picture_description}','${taken_time}','${picture_content}','${sort_name}')`
+    connection.query(sql, (err, result) => {
+      if (err) {
+        res.send(err)
+      } else {
+        let data = result
+        res.send(data)
+      }
+    })
+    connection.end()
+  } else {
+    res.send({ status: 0 })
+  }
+})
 
 //获取评论
 router.get('/comments', (req, res, next) => {
@@ -161,7 +260,7 @@ router.post('/createComment', (req, res, next) => {
       password: '542641',
       database: 'u247080489_myWeb'
     })
-    let comment_Id = req.body.comment_Id
+    let comment_Id = +new Date()
     let user_name = req.body.user_name
     let comment_content = req.body.comment_content
     let comment_date = req.body.comment_date
