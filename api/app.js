@@ -17,7 +17,7 @@ var app = express()
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://192.168.100.108:3000',
     methods: ['GET', 'POST'],
     alloweHeaders: ['Conten-Type', 'Authorization'],
     credentials: true
