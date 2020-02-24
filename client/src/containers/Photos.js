@@ -5,7 +5,6 @@ import { Redirect, withRouter, Link } from 'react-router-dom'
 import { DatePicker, Button } from 'antd'
 import { actions as photosActions, getPhotos } from '../redux/photos'
 import { actions as authActions, getUsername } from '../redux/auth'
-import Item from 'antd/lib/list/Item'
 
 class Photos extends Component {
   onChange = dates => {

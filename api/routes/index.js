@@ -212,9 +212,8 @@ router.post('/uploadPhoto', upload.single('photo'), (req, res, next) => {
     let picture_description = req.body.picture_description
     let taken_time = req.body.taken_time
     const reg = /\\/g
-    let picture_content = req.file.path.replace(reg, '/')
-    let sort_name = req.body.sort_name
-    const sql = `insert into pictures (picture_Id,upload_time,user_name,picture_size,picture_description,taken_time,picture_content,sort_name) values ('${picture_Id}','${upload_time}','${user_name}','${picture_size}','${picture_description}','${taken_time}','${picture_content}','${sort_name}')`
+    let picture_content = req.file.path.replace(reg, '/') + fileName
+    const sql = `insert into pictures (picture_Id,upload_time,user_name,picture_size,picture_description,taken_time,picture_content) values ('${picture_Id}','${upload_time}','${user_name}','${picture_size}','${picture_description}','${taken_time}','${picture_content}')`
     connection.query(sql, (err, result) => {
       if (err) {
         res.send(err)
