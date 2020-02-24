@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 var session = require('express-session')
 import bodyParser from 'body-parser'
+var cors = require('cors')
 
 var indexRouter = require('./routes/index')
 
@@ -14,6 +15,14 @@ var app = express()
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    alloweHeaders: ['Conten-Type', 'Authorization'],
+    credentials: true
+  })
+)
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -22,10 +31,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(
   session({
-    secret: 'zhoudapeng',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60 * 1000 * 10 }
+    secret: 'keyboard cat',
+    esave: true,
+    saveUninitialized: true
   })
 )
 app.use('/api', indexRouter)

@@ -44,24 +44,25 @@ router.post('/login', (req, res, next) => {
   //连接数据库
   let mysql = require('mysql')
   let connection = mysql.createConnection({
-    host: '156.67.222.213',
-    user: 'u247080489_zhou_pp467',
-    password: '542641',
-    database: 'u247080489_myWeb'
+    host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+    port: '10073',
+    user: 'root',
+    password: '5426416zdp10467',
+    database: 'myWeb'
   })
   const { username, password } = req.body
   const sql = `SELECT * FROM users WHERE user_name = '${username}'`
   connection.query(sql, (err, result) => {
     if (err) {
-      res.send({ status: 0 })
+      res.send(err)
       return
     }
     const passwordInput = result[0]['user_password']
     if (passwordInput !== password) {
-      res.send({ status: 0 })
+      res.send('用户名密码错误')
       return
     } else {
-      req.session.username = username
+      req.session.username = result[0]['user_name']
       res.send(result)
       return
     }
@@ -77,27 +78,28 @@ router.get('/logout', (req, res, next) => {
 
 //获取照片墙
 router.get('/getPhotos', (req, res, next) => {
+  console.log('reqsession' + req.session.username)
   if (req.session.username) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     const sql = `SELECT picture_Id,picture_content,picture_description FROM pictures ORDER BY taken_time DESC`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send({ status: 0 })
+        res.send(err)
       } else {
-        let data = result
-        res.send(data)
+        res.send(result)
       }
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send(req.session)
   }
 })
 
@@ -107,10 +109,11 @@ router.get('/photoDetail', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     const id = req.query.pictureId
     const sql = `SELECT * FROM pictures WHERE picture_Id = '${id}'`
@@ -128,22 +131,24 @@ router.get('/photoDetail', (req, res, next) => {
   }
 })
 
-// 获取指定月份照片
-router.get('/getPhotosByMonth', (req, res, next) => {
+// 获取指定时间照片
+router.post('/getPhotosByDate', (req, res, next) => {
   if (req.session.username) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
-    const month = req.query.month
-    const sql = `SELECT picture_Id,picture_content,picture_description FROM pictures where sort_name ="${month}"ORDER BY taken_time DESC`
+    const startDate = req.body.dates[0]
+    const endDate = req.body.dates[1]
+    const sql = `SELECT picture_Id,picture_content,picture_description FROM pictures where taken_time >="${startDate}" and taken_time < "${endDate}" ORDER BY taken_time DESC`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send({ status: 0 })
+        res.send(err)
       } else {
         let data = result
         res.send(data)
@@ -164,10 +169,11 @@ router.post('/editPhotoDetail', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     let picture_Id = req.body.picture_Id
     let picture_description = req.body.picture_description
@@ -192,10 +198,11 @@ router.post('/uploadPhoto', upload.single('photo'), (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     console.log(req.file.path)
     let picture_Id = +new Date()
@@ -228,10 +235,11 @@ router.get('/comments', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     const picture_Id = req.query.picture_Id
     const sql = `SELECT * FROM comments where picture_Id ="${picture_Id}"ORDER BY comment_date DESC`
@@ -255,10 +263,11 @@ router.post('/createComment', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     let comment_Id = +new Date()
     let user_name = req.body.user_name
@@ -286,10 +295,11 @@ router.post('/deleteComment', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     let comment_Id = req.body.comment_Id
     const sql = `delete from comments where comment_Id = '${comment_Id}'`
@@ -313,10 +323,11 @@ router.post('/deletePhoto', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     let picture_Id = req.body.picture_Id
     const sql = `delete from pictures where picture_Id = '${picture_Id}'`
@@ -340,10 +351,11 @@ router.post('/createUser', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     let username = req.body.username
     let password = req.body.password
@@ -369,10 +381,11 @@ router.get('/deleteUser', (req, res, next) => {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
-      host: '156.67.222.213',
-      user: 'u247080489_zhou_pp467',
-      password: '542641',
-      database: 'u247080489_myWeb'
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
     })
     let username = req.query.username
     const sql = `DELETE FROM users WHERE user_name='${username}'`
