@@ -3,21 +3,25 @@ axios.defaults.withCredentials = true
 
 export const types = {
   LOGIN: 'AUTH/LOGIN',
-  LOGOUT: 'AUTH/LOGOUT'
+  LOGOUT: 'AUTH/LOGOUT',
+  LOGINFAIL: 'AUTH/LOGINFAIL',
+  LOADING: 'AUTH/LOADING'
 }
 
 const initialState = {
   userId: null,
   username: null,
-  user_function: 9
+  user_function: 9,
+  login_fail: 'notloading'
 }
 
 export const actions = {
   login: obj => {
     return dispatch => {
+      dispatch({ type: types.LOADING })
       let resuser_function, resusername
       axios
-        .post('http://118.89.63.17/api/login', {
+        .post('http://127.0.0.1/api/login', {
           username: obj.username,
           password: obj.password
         })
@@ -33,12 +37,14 @@ export const actions = {
         })
         .catch(function(err) {
           console.log(err)
+          alert('登陆失败！')
+          dispatch({ type: types.LOGINFAIL })
         })
     }
   },
   logout: () => {
     axios
-      .get('http://118.89.63.17/api/logout')
+      .get('http://127.0.0.1/api/logout')
       .then(function(response) {
         console.log(response)
       })
@@ -57,7 +63,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         username: action.username,
-        user_function: action['user_function']
+        user_function: action['user_function'],
+        login_fail: 'notloading'
       }
     case types.LOGOUT:
       return {
@@ -65,6 +72,16 @@ const reducer = (state = initialState, action) => {
         username: null,
         userId: null,
         user_function: 9
+      }
+    case types.LOGINFAIL:
+      return {
+        ...state,
+        login_fail: 'notloading'
+      }
+    case types.LOADING:
+      return {
+        ...state,
+        login_fail: 'loading'
       }
     default:
       return state
@@ -80,6 +97,6 @@ export const getUsername = state => {
     case 'guaiguai':
       return '乖乖'
     default:
-      return state.username
+      return state.username ? '游客' : null
   }
 }

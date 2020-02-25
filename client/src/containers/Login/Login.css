@@ -1,0 +1,34 @@
+/* 登录页 */
+@import '../../../node_modules/antd/dist/antd.css';
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  border-top: 1px solid transparent;
+  background-image: url(../../images/223898964.jpeg);
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  /* padding-top: 80px; */
+  box-sizing: border-box;
+}
+
+.login-form h1 {
+  margin: 40px 0;
+  text-align: center;
+}
+.login-container {
+  border: 1px solid #ccc;
+  margin: 150px 0 0 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 360px;
+  background-color: #fff;
+}
+.login-form {
+  max-width: 300px;
+  margin: 50px auto;
+}
+.login-form-button {
+  width: 300px;
+}

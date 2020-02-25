@@ -2,20 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Form, Icon, Input, Button } from 'antd'
-import { actions as authActions } from '../redux/auth'
+import { actions as authActions } from '../../redux/auth'
 import { withRouter, Redirect } from 'react-router-dom'
+import './Login.css'
 
 class Login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { isbuttondisable: false }
-  }
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.login(values)
-        this.setState({ isbuttondisable: true })
       }
     })
   }
@@ -58,7 +54,7 @@ class Login extends Component {
               type="primary"
               htmlType="submit"
               className="login-form-button"
-              disabled={this.state.isbuttondisable}
+              disabled={this.props.login_fail === 'loading'}
             >
               登录
             </Button>
@@ -70,7 +66,10 @@ class Login extends Component {
 }
 const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(Login)
 const mapStateToProps = state => {
-  return { username: state.auth.username }
+  return {
+    username: state.auth.username,
+    login_fail: state.auth.login_fail
+  }
 }
 
 const mapDispatchToProps = dispatch => {

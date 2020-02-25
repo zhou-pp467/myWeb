@@ -39,7 +39,7 @@ let upload = multer({
   }
 })
 
-//登录 0:fail; 1:success
+//登录
 router.post('/login', (req, res, next) => {
   //连接数据库
   let mysql = require('mysql')
@@ -59,7 +59,7 @@ router.post('/login', (req, res, next) => {
     }
     const passwordInput = result[0]['user_password']
     if (passwordInput !== password) {
-      res.send('用户名密码错误')
+      res.send('500')
       return
     } else {
       req.session.username = result[0]['user_name']
