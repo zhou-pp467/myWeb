@@ -81,7 +81,13 @@ body,
   padding: 10px;
   background-color: #fff;
 }
+.photos-container .photo-contents p {
+  color: #000;
+  font-size: 18px;
+  text-align: center;
+}
 .photos-container .photo-contents img {
   width: 287px;
   margin-bottom: 10px;
+  vertical-align: top;
 }

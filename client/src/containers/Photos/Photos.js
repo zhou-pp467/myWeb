@@ -6,7 +6,7 @@ import { DatePicker, Button } from 'antd'
 import { actions as photosActions, getPhotos } from '../../redux/photos'
 import { actions as authActions, getUsername } from '../../redux/auth'
 import './Photos.css'
-import errImage from '../../images/error.jpg'
+import { errImg } from '../../images/index'
 
 class Photos extends Component {
   onChange = dates => {
@@ -19,28 +19,25 @@ class Photos extends Component {
 
   componentDidMount() {
     this.props.getPhotos()
-    // let imgs = document.getElementsByTagName('img')
-    // Array.prototype.map.call(imgs, (item, index, arr) => {
-    //   item.addEventListener('error', () => {
-    //     item.src = { errImage }
-    //   })
-    // })
   }
 
   render() {
     const { RangePicker } = DatePicker
-    console.log(this.props.photos.data)
     const username = this.props.username
+    const {
+      photos: { data = [] }
+    } = this.props
+
     return username ? (
       <div className="photos-container">
         <div className="header-container">
           <div className="header">
-            <h1>zhou_pp的个人空间</h1>
+            <h1>zhou_pp的照片墙</h1>
             <div className="user">
               <span>用户：</span>
               <span>{username}</span>
               {username === '呆呆' ? (
-                <Link to="/admin">
+                <Link to="/administer">
                   <Button type="normal" className="manage">
                     管理
                   </Button>
@@ -70,20 +67,25 @@ class Photos extends Component {
         </div>
         <div className="photos-body">
           <div className="photo-contents">
-            {this.props.photos.data.map((item, index, arr) => {
-              let marginRight = (index + 1) % 4 === 0 ? 0 : 10
-              return (
-                <img
-                  style={{ marginRight: `${marginRight}px` }}
-                  key={item['picture_Id']}
-                  src={item['picture_content']}
-                  title={item['picture_description']}
-                  //   onError={e => {
-                  //     e.target.src = { errImage }
-                  //   }}
-                />
-              )
-            })}
+            {!(data && data.length) ? (
+              <p>抱歉，没有当前时段的照片~</p>
+            ) : (
+              data.map((item, index, arr) => {
+                let marginRight = (index + 1) % 4 === 0 ? 0 : 10
+                return (
+                  <img
+                    style={{ marginRight: `${marginRight}px` }}
+                    key={item['picture_Id']}
+                    src={item['picture_content']}
+                    title={item['picture_description']}
+                    onError={e => {
+                      e.target.onError = null
+                      e.target.src = errImg
+                    }}
+                  />
+                )
+              })
+            )}
           </div>
         </div>
       </div>

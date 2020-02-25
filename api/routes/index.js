@@ -374,6 +374,8 @@ router.post('/createUser', (req, res, next) => {
   }
 })
 
+//修改密码
+
 //删除账号
 router.get('/deleteUser', (req, res, next) => {
   if (req.session.username === 'daidai') {
