@@ -6,7 +6,7 @@ import { DatePicker, Button } from 'antd'
 import { actions as photosActions, getPhotos } from '../../redux/photos'
 import { actions as authActions, getUsername } from '../../redux/auth'
 import './Photos.css'
-import { errImg } from '../../images/index'
+import Waterfall from '../../components/Waterfall'
 
 class Photos extends Component {
   onChange = dates => {
@@ -27,7 +27,7 @@ class Photos extends Component {
     const {
       photos: { data = [] }
     } = this.props
-
+    // console.log('data' + data)
     return username ? (
       <div className="photos-container">
         <div className="header-container">
@@ -70,21 +70,7 @@ class Photos extends Component {
             {!(data && data.length) ? (
               <p>抱歉，没有当前时段的照片~</p>
             ) : (
-              data.map((item, index, arr) => {
-                let marginRight = (index + 1) % 4 === 0 ? 0 : 10
-                return (
-                  <img
-                    style={{ marginRight: `${marginRight}px` }}
-                    key={item['picture_Id']}
-                    src={item['picture_content']}
-                    title={item['picture_description']}
-                    onError={e => {
-                      e.target.onError = null
-                      e.target.src = errImg
-                    }}
-                  />
-                )
-              })
+              <Waterfall data={data}></Waterfall>
             )}
           </div>
         </div>

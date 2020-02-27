@@ -81,13 +81,38 @@ body,
   padding: 10px;
   background-color: #fff;
 }
+.clearfix {
+  zoom: 1;
+}
+.clearfix :after {
+  content: '.';
+  display: block;
+  height: 0;
+  clear: both;
+}
+
 .photos-container .photo-contents p {
   color: #000;
   font-size: 18px;
   text-align: center;
 }
-.photos-container .photo-contents img {
+.photos-container .photo-contents .col1 {
   width: 287px;
-  margin-bottom: 10px;
-  vertical-align: top;
+  float: left;
+}
+.photos-container .photo-contents .col2,
+.photos-container .photo-contents .col3,
+.photos-container .photo-contents .col4 {
+  width: 287px;
+  float: left;
+  margin-left: 10px;
+}
+.photos-container .photo-contents img {
+  width: 100%;
+}
+.photos-container .photo-contents .col1 img,
+.photos-container .photo-contents .col2 img,
+.photos-container .photo-contents .col3 img,
+.photos-container .photo-contents .col4 img {
+  margin: 0 auto 10px;
 }
