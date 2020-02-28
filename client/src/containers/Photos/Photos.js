@@ -4,7 +4,11 @@ import { bindActionCreators } from 'redux'
 import { Redirect, withRouter, Link } from 'react-router-dom'
 import { DatePicker, Button } from 'antd'
 import { actions as photosActions, getPhotos } from '../../redux/photos'
-import { actions as authActions, getUsername } from '../../redux/auth'
+import {
+  actions as authActions,
+  getUsername,
+  getUserFunction
+} from '../../redux/auth'
 import './Photos.css'
 import Waterfall from '../../components/Waterfall'
 
@@ -23,6 +27,7 @@ class Photos extends Component {
 
   render() {
     const { RangePicker } = DatePicker
+    const userfunction = this.props.userfunction
     const username = this.props.username
     const {
       photos: { data = [] }
@@ -36,7 +41,7 @@ class Photos extends Component {
             <div className="user">
               <span>用户：</span>
               <span>{username}</span>
-              {username === '呆呆' ? (
+              {userfunction === 0 || userfunction === 1 ? (
                 <Link to="/administer">
                   <Button type="normal" className="manage">
                     管理
@@ -84,6 +89,7 @@ class Photos extends Component {
 const mapStateToProps = state => {
   return {
     username: getUsername(state.auth),
+    userfunction: getUserFunction(state.auth),
     photos: getPhotos(state.photos)
   }
 }

@@ -109,10 +109,12 @@ body,
 }
 .photos-container .photo-contents img {
   width: 100%;
+  cursor: pointer;
 }
 .photos-container .photo-contents .col1 img,
 .photos-container .photo-contents .col2 img,
 .photos-container .photo-contents .col3 img,
 .photos-container .photo-contents .col4 img {
   margin: 0 auto 10px;
+  cursor: pointer;
 }

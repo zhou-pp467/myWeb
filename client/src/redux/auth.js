@@ -91,12 +91,9 @@ const reducer = (state = initialState, action) => {
 export default reducer
 
 export const getUsername = state => {
-  switch (state.username) {
-    case 'daidai':
-      return '呆呆'
-    case 'guaiguai':
-      return '乖乖'
-    default:
-      return state.username ? '游客' : null
-  }
+  return state.username
+}
+
+export const getUserFunction = state => {
+  return state.user_function
 }

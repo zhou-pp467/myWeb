@@ -57,11 +57,13 @@ router.post('/login', (req, res, next) => {
       res.send(err)
       return
     }
-    const passwordInput = result[0]['user_password']
+    console.log(result)
+    const passwordInput = result && result[0] && result[0]['user_password']
     if (passwordInput !== password) {
       res.send('500')
       return
     } else {
+      req.session.userfunction = result[0]['user_function']
       req.session.username = result[0]['user_name']
       res.send(result)
       return
@@ -72,13 +74,13 @@ router.post('/login', (req, res, next) => {
 
 //退出
 router.get('/logout', (req, res, next) => {
+  req.session.userfunction = null
   req.session.username = null
   res.send({ status: 0 })
 })
 
 //获取照片墙
 router.get('/getPhotos', (req, res, next) => {
-  console.log('reqsession' + req.session.username)
   if (req.session.username) {
     //连接数据库
     let mysql = require('mysql')
@@ -163,7 +165,7 @@ router.post('/getPhotosByDate', (req, res, next) => {
 //编辑照片详情
 router.post('/editPhotoDetail', (req, res, next) => {
   if (
-    req.session.username === 'daidai' ||
+    req.session.function === 0 ||
     req.session.username === req.body.user_name
   ) {
     //连接数据库
@@ -194,7 +196,7 @@ router.post('/editPhotoDetail', (req, res, next) => {
 
 // 上传照片及详情
 router.post('/uploadPhoto', upload.single('photo'), (req, res, next) => {
-  if (req.session.username) {
+  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -258,7 +260,7 @@ router.get('/comments', (req, res, next) => {
 
 // 创建评论
 router.post('/createComment', (req, res, next) => {
-  if (req.session.username) {
+  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -290,7 +292,7 @@ router.post('/createComment', (req, res, next) => {
 
 // 删除评论
 router.post('/deleteComment', (req, res, next) => {
-  if (req.session.username === 'daidai') {
+  if (req.session.userfunction === 0) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -318,7 +320,7 @@ router.post('/deleteComment', (req, res, next) => {
 
 //删除照片
 router.post('/deletePhoto', (req, res, next) => {
-  if (req.session.username === 'daidai') {
+  if (req.session.userfunction === 0) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -344,9 +346,36 @@ router.post('/deletePhoto', (req, res, next) => {
   }
 })
 
+//获取用户列表
+router.get('/users', (req, res, next) => {
+  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
+    //连接数据库
+    let mysql = require('mysql')
+    let connection = mysql.createConnection({
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
+    })
+    const sql = `SELECT * FROM users`
+    connection.query(sql, (err, result) => {
+      if (err) {
+        console.log('err')
+        res.send(err)
+      } else {
+        res.send(result)
+      }
+    })
+    connection.end()
+  } else {
+    res.sendStatus(500)
+  }
+})
+
 // 创建账号
 router.post('/createUser', (req, res, next) => {
-  if (req.session.username === 'daidai') {
+  if (req.session.userfunction === 0) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -364,21 +393,55 @@ router.post('/createUser', (req, res, next) => {
       if (err) {
         res.send(err)
       } else {
-        let data = result
-        res.send(data)
+        res.send({
+          user_name: username,
+          user_password: password,
+          user_function: user_function
+        })
       }
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send(500)
   }
 })
 
-//修改密码
+//修改信息
+router.post('/changeInfo', (req, res, next) => {
+  if (req.session.userfunction === 0) {
+    //连接数据库
+    let mysql = require('mysql')
+    let connection = mysql.createConnection({
+      host: 'cdb-0yzjn1q8.bj.tencentcdb.com',
+      port: '10073',
+      user: 'root',
+      password: '5426416zdp10467',
+      database: 'myWeb'
+    })
+    let username = req.body.username
+    let password = req.body.password
+    let user_function = req.body.user_function
+    const sql = `update users set user_password = '${password}',user_function = '${user_function}' where user_name='${username}'`
+    connection.query(sql, (err, result) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.send({
+          user_name: username,
+          user_password: password,
+          user_function: user_function
+        })
+      }
+    })
+    connection.end()
+  } else {
+    res.send(500)
+  }
+})
 
 //删除账号
 router.get('/deleteUser', (req, res, next) => {
-  if (req.session.username === 'daidai') {
+  if (req.session.userfunction === 0) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -394,13 +457,12 @@ router.get('/deleteUser', (req, res, next) => {
       if (err) {
         res.send(err)
       } else {
-        let data = result
-        res.send(data)
+        res.send(username)
       }
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send(500)
   }
 })
 
