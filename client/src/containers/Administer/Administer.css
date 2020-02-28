@@ -12,18 +12,19 @@ body,
 .administer {
   width: 100%;
   min-width: 1200px;
-  height: 100%;
+  /* height: 100%; */
   color: #fff;
   background-image: url(../../images/administer.jpg);
   background-attachment: fixed;
   background-size: 100% 100%;
+  border-top: 1px solid transparent;
 }
 .administer .header-container {
-  margin-top: -11px;
+  /* margin-top: -11px; */
+  padding-bottom: 10px;
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   min-width: 1200px;
-  position: fixed;
 }
 .administer .header {
   margin: 0 auto;
@@ -53,4 +54,79 @@ body,
   margin-left: 16px;
   color: #1890ff;
   font-weight: bold;
+}
+.administer-body {
+  background-color: #fff;
+  color: #000;
+  width: 750px;
+  margin: 30px auto 30px;
+  border-radius: 10px;
+  min-height: 500px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 30px;
+  box-sizing: border-box;
+}
+.administer-body h1 {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+.administer-body .infoItem {
+  height: 50px;
+  line-height: 50px;
+  box-sizing: border-box;
+}
+.administer-body .even {
+  background-color: #eee;
+}
+.administer-body .changeInfoButton {
+  float: right;
+  margin-top: 10px;
+}
+.administer-body .passwordInfo {
+  float: left;
+  margin-left: 70px;
+  width: 80px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.administer-body .userInfo {
+  margin-left: 40px;
+  width: 80px;
+  float: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.administer-body .deleteButton {
+  float: right;
+  margin-left: 40px;
+  margin-top: 10px;
+  margin-right: 40px;
+}
+.administer-body .functionInfo {
+  float: left;
+  width: 80px;
+  margin-left: 50px;
+  text-align: center;
+}
+.administer-body .switchPasswordShow {
+  margin-top: 20px;
+  display: block;
+  float: right;
+}
+.administer-body .addNewUser {
+  margin-top: 16px;
+  display: block;
+  float: right;
+  margin-left: 30px;
+}
+.changeInfoForm {
+  padding-left: 80px;
+}
+.radio {
+  display: block;
 }

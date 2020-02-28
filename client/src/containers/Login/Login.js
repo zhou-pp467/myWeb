@@ -1,74 +1,33 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Form, Icon, Input, Button } from 'antd'
 import { actions as authActions } from '../../redux/auth'
 import { withRouter, Redirect } from 'react-router-dom'
 import './Login.css'
+import LoginContent from '../../components/LoginContent'
 
 class Login extends Component {
-  handleSubmit = e => {
-    e.preventDefault()
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.login(values)
-      }
-    })
+  constructor(props) {
+    super(props)
+    this.state = {}
   }
-
   render() {
-    const { getFieldDecorator } = this.props.form
-    return this.props.username ? (
-      <Redirect to="/photos" />
-    ) : (
+    return !this.props.username ? (
       <div className="login-container">
-        <Form onSubmit={this.handleSubmit} className="login-form">
+        <div className="login-form">
           <h1>zhou_pp的个人空间</h1>
-          <Form.Item>
-            {getFieldDecorator('username', {
-              rules: [{ required: true, message: '请输入用户名!' }]
-            })(
-              <Input
-                prefix={
-                  <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                placeholder="用户名"
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('password', {
-              rules: [{ required: true, message: '请输入密码!' }]
-            })(
-              <Input
-                prefix={
-                  <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
-                }
-                type="password"
-                placeholder="密码"
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-              disabled={this.props.login_fail === 'loading'}
-            >
-              登录
-            </Button>
-          </Form.Item>
-        </Form>
+          <LoginContent {...this.props} />
+        </div>
       </div>
+    ) : (
+      <Redirect to="/photos" />
     )
   }
 }
-const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(Login)
+
 const mapStateToProps = state => {
   return {
-    username: state.auth.username,
-    login_fail: state.auth.login_fail
+    username: state.auth.username
   }
 }
 
@@ -77,6 +36,4 @@ const mapDispatchToProps = dispatch => {
     ...bindActionCreators(authActions, dispatch)
   }
 }
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(WrappedNormalLoginForm)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))

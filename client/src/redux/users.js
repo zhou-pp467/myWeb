@@ -16,11 +16,11 @@ export const actions = {
       axios
         .get('http://127.0.0.1/api/users')
         .then(res => {
-          let users = res
+          let users = res.data
           dispatch({ type: types.GETUSERS, users })
         })
         .catch(err => {
-          console.log(err)
+          alert(err)
         })
     }
   },
@@ -33,24 +33,28 @@ export const actions = {
           user_function: newFunction
         })
         .then(function(response) {
-          let addedUser = response
+          let addedUser = response.data
           dispatch({ type: types.ADDUSER, addedUser })
         })
         .catch(function(error) {
-          console.log(error)
+          alert(error)
         })
     }
   },
   deleteUser: username => {
     return dispatch => {
+      console.log(username)
       axios
-        .get('http://127.0.0.1/api/deleteUser', { username: username })
+        .get('http://127.0.0.1/api/deleteUser', {
+          params: { username: username }
+        })
         .then(res => {
-          let deletedUser = res
+          let deletedUser = res.data
+          console.log(deletedUser)
           dispatch({ type: types.DELETEUSER, deletedUser })
         })
         .catch(err => {
-          console.log(err)
+          alert(err)
         })
     }
   },
@@ -63,11 +67,11 @@ export const actions = {
           user_function: newFunction
         })
         .then(function(res) {
-          let changedUser = res
+          let changedUser = res.data
           dispatch({ type: types.CHANGEINFO, changedUser })
         })
         .catch(function(err) {
-          console.log(err)
+          alert(err)
         })
     }
   }
@@ -80,6 +84,7 @@ const reducer = (state = initialState, action) => {
     case types.ADDUSER:
       return { userList: [...state.userList, action.addedUser] }
     case types.DELETEUSER:
+      console.log(state.userList)
       return {
         userList: state.userList.filter(
           (item, index, arr) => item['user_name'] !== action.deletedUser

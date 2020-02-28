@@ -334,7 +334,7 @@ router.post('/deletePhoto', (req, res, next) => {
     const sql = `delete from pictures where picture_Id = '${picture_Id}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.sendStatus(500)
       } else {
         let data = result
         res.send(data)
@@ -342,7 +342,7 @@ router.post('/deletePhoto', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.sendStatus(500)
   }
 })
 
@@ -362,7 +362,7 @@ router.get('/users', (req, res, next) => {
     connection.query(sql, (err, result) => {
       if (err) {
         console.log('err')
-        res.send(err)
+        res.sendStatus(500)
       } else {
         res.send(result)
       }
@@ -451,18 +451,19 @@ router.get('/deleteUser', (req, res, next) => {
       password: '5426416zdp10467',
       database: 'myWeb'
     })
-    let username = req.query.username
-    const sql = `DELETE FROM users WHERE user_name='${username}'`
+    console.log(req.query)
+    const sql = `DELETE FROM users WHERE user_name='${req.query.username}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.sendStatus(500)
       } else {
-        res.send(username)
+        console.log('deletedusername' + req.query.username)
+        res.send(req.query.username)
       }
     })
     connection.end()
   } else {
-    res.send(500)
+    res.sendStatus(500)
   }
 })
 

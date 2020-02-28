@@ -63,6 +63,7 @@ class Photos extends Component {
             <div className="range">
               <span>选择照片时段：</span>
               <RangePicker
+                placeholder={['        起始日期', '        结束日期']}
                 className="range-picker"
                 size="medium"
                 onChange={dates => this.onChange(dates)}

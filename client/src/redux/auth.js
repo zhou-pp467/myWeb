@@ -11,8 +11,7 @@ export const types = {
 const initialState = {
   userId: null,
   username: null,
-  user_function: 9,
-  login_fail: 'notloading'
+  user_function: 9
 }
 
 export const actions = {
