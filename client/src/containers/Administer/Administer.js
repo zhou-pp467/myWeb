@@ -165,9 +165,11 @@ const AddUserForm = ({ visible, onCreate, onCancel, addUser }) => {
           label="用户名"
           rules={[
             {
+              pattern:
+                '^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,10}$',
               whitespace: true,
               required: true,
-              message: '用户名不能为空'
+              message: "仅支持长度在10以内的中文，英文，数字，符号'-'和'_'"
             }
           ]}
         >
@@ -367,7 +369,7 @@ class Administer extends Component {
                       <Button
                         className="deleteButton"
                         onClick={e => {
-                          this.handleDelete(e.target.getAttribute('loginName'))
+                          this.handleDelete(e.target.getAttribute('username'))
                         }}
                         username={item['user_name']}
                         disabled={loginName === item['user_name']}
