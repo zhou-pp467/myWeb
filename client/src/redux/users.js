@@ -17,6 +17,7 @@ export const actions = {
         .get('http://127.0.0.1/api/users')
         .then(res => {
           let users = res.data
+          console.log(users, 'getusrsres')
           dispatch({ type: types.GETUSERS, users })
         })
         .catch(err => {
@@ -28,7 +29,7 @@ export const actions = {
     return dispatch => {
       axios
         .post('http://127.0.0.1/api/createUser', {
-          username: newUsername,
+          username: 'user' + newUsername,
           password: newPassword,
           user_function: newFunction
         })
@@ -67,6 +68,7 @@ export const actions = {
           user_function: newFunction
         })
         .then(function(res) {
+          console.log(res.data)
           let changedUser = res.data
           dispatch({ type: types.CHANGEINFO, changedUser })
         })
@@ -80,7 +82,10 @@ export const actions = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case types.GETUSERS:
-      return { ...state, userList: action.users }
+      console.log(action.users, 'action.user')
+      return {
+        userList: action.users
+      }
     case types.ADDUSER:
       return { userList: [...state.userList, action.addedUser] }
     case types.DELETEUSER:

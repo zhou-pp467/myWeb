@@ -17,7 +17,9 @@ const ChangeInfo = ({
   onCancel,
   username,
   changeInfo,
-  loginName
+  loginName,
+  defaultPassword,
+  defaultFunction
 }) => {
   const [form] = Form.useForm()
   return (
@@ -34,9 +36,8 @@ const ChangeInfo = ({
         form
           .validateFields()
           .then(values => {
-            form.resetFields()
-            onCreate(values)
             changeInfo(values.username, values.password, values.function)
+            onCreate(values)
           })
           .catch(info => {
             console.log('Validate Failed:', info)
@@ -54,8 +55,8 @@ const ChangeInfo = ({
         name="form_in_modal"
         initialValues={{
           username: username,
-          password: '',
-          function: 0
+          password: defaultPassword,
+          function: defaultFunction
         }}
       >
         <Form.Item className="usernameLabel" name="username" label="用户名">
@@ -77,43 +78,33 @@ const ChangeInfo = ({
         >
           <Input type="textarea" />
         </Form.Item>
-        {loginName === '呆呆' ? (
-          <Form.Item
-            name="function"
-            label="身份"
-            className="functionSetter"
-            rules={[
-              {
-                required: true
-              }
-            ]}
-          >
-            <Radio.Group>
-              {username === '呆呆' ? (
-                <Radio className="radio" value={0}>
-                  总管理员
-                </Radio>
-              ) : (
-                ''
-              )}
 
-              {username !== '呆呆' ? (
-                <div>
-                  <Radio className="radio" value={1}>
-                    副管理员
-                  </Radio>
-                  <Radio className="radio" value={9}>
-                    游客
-                  </Radio>
-                </div>
-              ) : (
-                ''
-              )}
-            </Radio.Group>
-          </Form.Item>
-        ) : (
-          ''
-        )}
+        <Form.Item
+          name="function"
+          label="身份"
+          className="functionSetter"
+          rules={[
+            {
+              required: true
+            }
+          ]}
+        >
+          <Radio.Group disabled={username === '呆呆' || loginName !== '呆呆'}>
+            {username !== '呆呆' ? (
+              ''
+            ) : (
+              <Radio className="radio" value={0}>
+                总管理员
+              </Radio>
+            )}
+            <Radio className="radio" value={1}>
+              副管理员
+            </Radio>
+            <Radio className="radio" value={9}>
+              游客
+            </Radio>
+          </Radio.Group>
+        </Form.Item>
       </Form>
     </Modal>
   )
@@ -166,10 +157,11 @@ const AddUserForm = ({ visible, onCreate, onCancel, addUser }) => {
           rules={[
             {
               pattern:
-                '^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,10}$',
+                '^(?![0-9]+$)([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_-]){1,10}$',
               whitespace: true,
               required: true,
-              message: "仅支持长度在10以内的中文，英文，数字，符号'-'和'_'"
+              message:
+                '仅支持长度在10以内的由数字，汉字，英文和符号-_组成的非纯数字用户名'
             }
           ]}
         >
@@ -265,6 +257,8 @@ const ChangeInfoButton = props => {
       <ChangeInfo
         {...props}
         username={props.username}
+        defaultFunction={props.function}
+        defaultPassword={props.password}
         visible={visible}
         onCreate={onCreate}
         onCancel={() => {
@@ -314,7 +308,8 @@ class Administer extends Component {
 
   render() {
     const { loginName, userfunction, userList } = this.props
-    const userListToMap = userList
+    console.log('render', userList)
+    // const userListToMap = userList
     return userfunction === 0 || userfunction === 1 ? (
       <div className="administer">
         <div className="header-container">
@@ -343,57 +338,62 @@ class Administer extends Component {
         <div className="administer-body">
           <h1>账号信息列表</h1>
           <div>
-            {userListToMap.map((item, index, arr) => {
-              let bgcontroller = index % 2 === 0 ? 'even' : 'odd'
-              let user_function
-              switch (item['user_function']) {
-                case 0:
-                  user_function = '总管理员'
-                  break
-                case 1:
-                  user_function = '副管理员'
-                  break
-                case 9:
-                  user_function = '游客'
-                  break
-                default:
-                  break
-              }
-              return (
-                <div key={index}>
-                  {(loginName === item['user_name'] || userfunction === 0) && (
-                    <div className={'infoItem' + ' ' + bgcontroller}>
-                      <b className="userInfo" title={item['user_name']}>
-                        {item['user_name']}
-                      </b>
-                      <Button
-                        className="deleteButton"
-                        onClick={e => {
-                          this.handleDelete(e.target.getAttribute('username'))
-                        }}
-                        username={item['user_name']}
-                        disabled={loginName === item['user_name']}
-                      >
-                        删除
-                      </Button>
-                      <ChangeInfoButton
-                        {...this.props}
-                        username={item['user_name']}
-                      />
-                      <b className="functionInfo">{user_function}</b>
-                      {this.state.showPassword && (
-                        <b
-                          className="passwordInfo"
-                          title={item['user_password']}
-                        >
-                          {item['user_password']}
+            {userList &&
+              userList.length &&
+              userList.map((item, index, arr) => {
+                let bgcontroller = index % 2 === 0 ? 'even' : 'odd'
+                let user_function
+                switch (item['user_function']) {
+                  case 0:
+                    user_function = '总管理员'
+                    break
+                  case 1:
+                    user_function = '副管理员'
+                    break
+                  case 9:
+                    user_function = '游客'
+                    break
+                  default:
+                    break
+                }
+                return (
+                  <div key={item['user_name']}>
+                    {(loginName === item['user_name'] ||
+                      userfunction === 0) && (
+                      <div className={'infoItem' + ' ' + bgcontroller}>
+                        <b className="userInfo" title={item['user_name']}>
+                          {item['user_name']}
                         </b>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+                        <Button
+                          className="deleteButton"
+                          onClick={e => {
+                            this.handleDelete(e.target.getAttribute('username'))
+                          }}
+                          username={item['user_name']}
+                          disabled={loginName === item['user_name']}
+                        >
+                          删除
+                        </Button>
+                        <ChangeInfoButton
+                          {...this.props}
+                          username={item['user_name']}
+                          function={item['user_function']}
+                          password={item['user_password']}
+                        />
+                        <b className="functionInfo">{user_function}</b>
+                        {this.state.showPassword && (
+                          <b
+                            className="passwordInfo"
+                            title={item['user_password']}
+                          >
+                            {item['user_password']}
+                          </b>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
           </div>
           {userfunction === 0 && <AddNewUserButton {...this.props} />}
           <Switch

@@ -408,7 +408,7 @@ router.post('/createUser', (req, res, next) => {
 
 //修改信息
 router.post('/changeInfo', (req, res, next) => {
-  if (req.session.userfunction === 0) {
+  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -458,7 +458,7 @@ router.get('/deleteUser', (req, res, next) => {
         res.sendStatus(500)
       } else {
         console.log('deletedusername' + req.query.username)
-        res.send(req.query.username)
+        res.send(req.query.username + '')
       }
     })
     connection.end()
