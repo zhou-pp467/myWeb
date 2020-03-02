@@ -20,7 +20,7 @@ body,
   border-top: 1px solid transparent;
 }
 .administer .header-container {
-  /* margin-top: -11px; */
+  margin-top: -11px;
   padding-bottom: 10px;
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
@@ -32,6 +32,13 @@ body,
   text-align: center;
   position: relative;
   border-top: 1px solid #1890ff;
+}
+.administer .header .upload-photo {
+  color: #1890ff;
+  font-weight: bold;
+  position: absolute;
+  left: 200px;
+  top: 38px;
 }
 .administer .header h1 {
   margin: 30px 0;

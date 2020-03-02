@@ -1,5 +1,4 @@
-import axios from 'axios'
-axios.defaults.withCredentials = true
+import axios from '../utils/axios'
 
 const initialState = {
   photos: {}
@@ -17,11 +16,12 @@ export const actions = {
       axios
         .get('http://127.0.0.1/api/getPhotos')
         .then(res => {
+          console.log(res)
           photos = res
           dispatch({ type: types.GETPHOTOS, photos: photos })
         })
         .catch(err => {
-          console.log(err)
+          console.log(err, 'getphotos')
         })
     }
   },
@@ -38,7 +38,7 @@ export const actions = {
           })
         })
         .catch(err => {
-          console.log(err)
+          console.log(err, 'getphotosbydate')
         })
     }
   }

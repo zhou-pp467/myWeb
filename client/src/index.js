@@ -20,7 +20,7 @@ const myReducer = persistReducer(
 // const create = window.devToolsExtension
 //   ? window.devToolsExtension()(createStore)
 //   : createStore
-const store = createStore(myReducer, applyMiddleware(thunk))
+export const store = createStore(myReducer, applyMiddleware(thunk))
 const persistor = persistStore(store)
 
 ReactDOM.render(

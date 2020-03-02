@@ -1,5 +1,4 @@
-import axios from 'axios'
-axios.defaults.withCredentials = true
+import axios from '../utils/axios'
 
 const initialState = { userList: [] }
 
@@ -21,7 +20,7 @@ export const actions = {
           dispatch({ type: types.GETUSERS, users })
         })
         .catch(err => {
-          alert(err)
+          console.log(err, 'getuser')
         })
     }
   },
@@ -29,7 +28,7 @@ export const actions = {
     return dispatch => {
       axios
         .post('http://127.0.0.1/api/createUser', {
-          username: 'user' + newUsername,
+          username: newUsername,
           password: newPassword,
           user_function: newFunction
         })
@@ -38,7 +37,7 @@ export const actions = {
           dispatch({ type: types.ADDUSER, addedUser })
         })
         .catch(function(error) {
-          alert(error)
+          console.log('adduser', error)
         })
     }
   },
@@ -55,7 +54,7 @@ export const actions = {
           dispatch({ type: types.DELETEUSER, deletedUser })
         })
         .catch(err => {
-          alert(err)
+          console.log('deleteuser', err)
         })
     }
   },
@@ -73,7 +72,7 @@ export const actions = {
           dispatch({ type: types.CHANGEINFO, changedUser })
         })
         .catch(function(err) {
-          alert(err)
+          console.log('changeinfo', err)
         })
     }
   }

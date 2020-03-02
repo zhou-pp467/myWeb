@@ -32,6 +32,13 @@ body,
   position: relative;
   border-top: 1px solid #1890ff;
 }
+.photos-container .header .upload-photo {
+  color: #1890ff;
+  font-weight: bold;
+  position: absolute;
+  left: 200px;
+  top: 30px;
+}
 .photos-container .header h1 {
   margin: 22px 0 10px;
   color: #fff;
@@ -79,12 +86,12 @@ body,
   width: 1200px;
   /* height: 2000px; */
   padding: 10px;
-  background-color: #fff;
+  background-color: rgba(248, 247, 242, 0.81);
 }
-.clearfix {
+.myclearfix {
   zoom: 1;
 }
-.clearfix :after {
+.myclearfix:after {
   content: '.';
   display: block;
   height: 0;

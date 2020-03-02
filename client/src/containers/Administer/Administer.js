@@ -76,7 +76,7 @@ const ChangeInfo = ({
             }
           ]}
         >
-          <Input type="textarea" />
+          <Input.Password />
         </Form.Item>
 
         <Form.Item
@@ -93,7 +93,7 @@ const ChangeInfo = ({
             {username !== '呆呆' ? (
               ''
             ) : (
-              <Radio className="radio" value={0}>
+              <Radio className="radio" value={2}>
                 总管理员
               </Radio>
             )}
@@ -180,7 +180,7 @@ const AddUserForm = ({ visible, onCreate, onCancel, addUser }) => {
             }
           ]}
         >
-          <Input type="textarea" />
+          <Input.Password />
         </Form.Item>
         <Form.Item
           name="function"
@@ -281,23 +281,6 @@ class Administer extends Component {
     this.props.deleteUser(username)
   }
 
-  handleAddUser() {
-    this.setState({
-      createUservisible: true
-    })
-  }
-  handleAddOk = e => {}
-
-  handleAddCancel = e => {
-    this.setState({
-      addedFunction: '',
-      addedPassword: '',
-      addedUser: '',
-      createUservisible: false
-    })
-  }
-  handleChangeInfo() {}
-
   logout = () => {
     this.props.logout()
   }
@@ -310,10 +293,15 @@ class Administer extends Component {
     const { loginName, userfunction, userList } = this.props
     console.log('render', userList)
     // const userListToMap = userList
-    return userfunction === 0 || userfunction === 1 ? (
+    return userfunction === 2 || userfunction === 1 ? (
       <div className="administer">
         <div className="header-container">
           <div className="header">
+            <Link to="/photoupload">
+              <Button type="normal" className="upload-photo">
+                上传照片
+              </Button>
+            </Link>
             <h1>zhou_pp的管理员页面</h1>
             <div className="user">
               <span>用户：</span>
@@ -344,7 +332,7 @@ class Administer extends Component {
                 let bgcontroller = index % 2 === 0 ? 'even' : 'odd'
                 let user_function
                 switch (item['user_function']) {
-                  case 0:
+                  case 2:
                     user_function = '总管理员'
                     break
                   case 1:
@@ -359,7 +347,7 @@ class Administer extends Component {
                 return (
                   <div key={item['user_name']}>
                     {(loginName === item['user_name'] ||
-                      userfunction === 0) && (
+                      userfunction === 2) && (
                       <div className={'infoItem' + ' ' + bgcontroller}>
                         <b className="userInfo" title={item['user_name']}>
                           {item['user_name']}
@@ -395,7 +383,7 @@ class Administer extends Component {
                 )
               })}
           </div>
-          {userfunction === 0 && <AddNewUserButton {...this.props} />}
+          {userfunction === 2 && <AddNewUserButton {...this.props} />}
           <Switch
             className="switchPasswordShow"
             checkedChildren="隐藏密码"

@@ -54,14 +54,13 @@ router.post('/login', (req, res, next) => {
   const sql = `SELECT * FROM users WHERE user_name = '${username}'`
   connection.query(sql, (err, result) => {
     if (err) {
-      res.send(err)
+      res.send(500)
       return
     }
     console.log(result)
     const passwordInput = result && result[0] && result[0]['user_password']
     if (passwordInput !== password) {
       res.send('500')
-      return
     } else {
       req.session.userfunction = result[0]['user_function']
       req.session.username = result[0]['user_name']
@@ -76,7 +75,6 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res, next) => {
   req.session.userfunction = null
   req.session.username = null
-  res.send({ status: 0 })
 })
 
 //获取照片墙
@@ -94,14 +92,15 @@ router.get('/getPhotos', (req, res, next) => {
     const sql = `SELECT picture_Id,picture_content,picture_description FROM pictures ORDER BY taken_time DESC`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.send(500)
       } else {
+        console.log('getphotosuccess')
         res.send(result)
       }
     })
     connection.end()
   } else {
-    res.send(req.session)
+    res.send('401')
   }
 })
 
@@ -121,7 +120,7 @@ router.get('/photoDetail', (req, res, next) => {
     const sql = `SELECT * FROM pictures WHERE picture_Id = '${id}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send({ status: 0 })
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -129,7 +128,7 @@ router.get('/photoDetail', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send('401')
   }
 })
 
@@ -150,7 +149,7 @@ router.post('/getPhotosByDate', (req, res, next) => {
     const sql = `SELECT picture_Id,picture_content,picture_description FROM pictures where taken_time >="${startDate}" and taken_time < "${endDate}" ORDER BY taken_time DESC`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -158,14 +157,14 @@ router.post('/getPhotosByDate', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send('401')
   }
 })
 
 //编辑照片详情
 router.post('/editPhotoDetail', (req, res, next) => {
   if (
-    req.session.function === 0 ||
+    req.session.function === 2 ||
     req.session.username === req.body.user_name
   ) {
     //连接数据库
@@ -182,7 +181,7 @@ router.post('/editPhotoDetail', (req, res, next) => {
     const sql = `update pictures set picture_description = '${picture_description}' where picture_Id='${picture_Id}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -190,13 +189,14 @@ router.post('/editPhotoDetail', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send('401')
   }
 })
 
 // 上传照片及详情
-router.post('/uploadPhoto', upload.single('photo'), (req, res, next) => {
-  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
+router.post('/uploadPhoto', upload.single('file'), (req, res, next) => {
+  //   console.log('req', req.session.userfunction)
+  if (req.session.userfunction === 2 || req.session.userfunction === 1) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -206,19 +206,22 @@ router.post('/uploadPhoto', upload.single('photo'), (req, res, next) => {
       password: '5426416zdp10467',
       database: 'myWeb'
     })
-    console.log(req.file.path)
+    console.log(req.file)
     let picture_Id = +new Date()
-    let upload_time = req.body.upload_time
+    let upload_time = new Date().toLocaleString()
     let user_name = req.body.user_name
-    let picture_size = req.body.picture_size
+    let picture_size = req.file.size
+    console.log(picture_size)
     let picture_description = req.body.picture_description
     let taken_time = req.body.taken_time
     const reg = /\\/g
-    let picture_content = req.file.path.replace(reg, '/') + fileName
+    let picture_content = req.file.path.replace(reg, '/') + req.filename
+    console.log(req.body)
     const sql = `insert into pictures (picture_Id,upload_time,user_name,picture_size,picture_description,taken_time,picture_content) values ('${picture_Id}','${upload_time}','${user_name}','${picture_size}','${picture_description}','${taken_time}','${picture_content}')`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        console.log('queryerr', err)
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -226,7 +229,7 @@ router.post('/uploadPhoto', upload.single('photo'), (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send('401')
   }
 })
 
@@ -246,7 +249,7 @@ router.get('/comments', (req, res, next) => {
     const sql = `SELECT * FROM comments where picture_Id ="${picture_Id}"ORDER BY comment_date DESC`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send({ status: 0 })
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -254,13 +257,13 @@ router.get('/comments', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send('401')
   }
 })
 
 // 创建评论
 router.post('/createComment', (req, res, next) => {
-  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
+  if (req.session.userfunction === 2 || req.session.userfunction === 1) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -278,7 +281,7 @@ router.post('/createComment', (req, res, next) => {
     const sql = `insert into comments (comment_Id,user_name,comment_content,comment_date,picture_Id) values ('${comment_Id}','${user_name}','${comment_content}','${comment_date}','${picture_Id}')`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -286,13 +289,13 @@ router.post('/createComment', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send('401')
   }
 })
 
 // 删除评论
 router.post('/deleteComment', (req, res, next) => {
-  if (req.session.userfunction === 0) {
+  if (req.session.userfunction === 2) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -306,7 +309,7 @@ router.post('/deleteComment', (req, res, next) => {
     const sql = `delete from comments where comment_Id = '${comment_Id}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -314,13 +317,13 @@ router.post('/deleteComment', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send({ status: 0 })
+    res.send('401')
   }
 })
 
 //删除照片
 router.post('/deletePhoto', (req, res, next) => {
-  if (req.session.userfunction === 0) {
+  if (req.session.userfunction === 2) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -334,7 +337,7 @@ router.post('/deletePhoto', (req, res, next) => {
     const sql = `delete from pictures where picture_Id = '${picture_Id}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.sendStatus(500)
+        res.send(500)
       } else {
         let data = result
         res.send(data)
@@ -342,13 +345,13 @@ router.post('/deletePhoto', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.sendStatus(500)
+    res.send('401')
   }
 })
 
 //获取用户列表
 router.get('/users', (req, res, next) => {
-  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
+  if (req.session.userfunction === 2 || req.session.userfunction === 1) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -362,20 +365,20 @@ router.get('/users', (req, res, next) => {
     connection.query(sql, (err, result) => {
       if (err) {
         console.log('err')
-        res.sendStatus(500)
+        res.send(500)
       } else {
         res.send(result)
       }
     })
     connection.end()
   } else {
-    res.sendStatus(500)
+    res.send('401')
   }
 })
 
 // 创建账号
 router.post('/createUser', (req, res, next) => {
-  if (req.session.userfunction === 0) {
+  if (req.session.userfunction === 2) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -391,7 +394,7 @@ router.post('/createUser', (req, res, next) => {
     const sql = `insert into users (user_name,user_password,user_function) values ('${username}','${password}','${user_function}')`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.send(500)
       } else {
         res.send({
           user_name: username,
@@ -402,13 +405,13 @@ router.post('/createUser', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send(500)
+    res.send('401')
   }
 })
 
 //修改信息
 router.post('/changeInfo', (req, res, next) => {
-  if (req.session.userfunction === 0 || req.session.userfunction === 1) {
+  if (req.session.userfunction === 2 || req.session.userfunction === 1) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -424,7 +427,7 @@ router.post('/changeInfo', (req, res, next) => {
     const sql = `update users set user_password = '${password}',user_function = '${user_function}' where user_name='${username}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.send(err)
+        res.send(500)
       } else {
         res.send({
           user_name: username,
@@ -435,13 +438,13 @@ router.post('/changeInfo', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.send(500)
+    res.send('401')
   }
 })
 
 //删除账号
 router.get('/deleteUser', (req, res, next) => {
-  if (req.session.userfunction === 0) {
+  if (req.session.userfunction === 2) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -455,7 +458,7 @@ router.get('/deleteUser', (req, res, next) => {
     const sql = `DELETE FROM users WHERE user_name='${req.query.username}'`
     connection.query(sql, (err, result) => {
       if (err) {
-        res.sendStatus(500)
+        res.send(500)
       } else {
         console.log('deletedusername' + req.query.username)
         res.send(req.query.username + '')
@@ -463,7 +466,7 @@ router.get('/deleteUser', (req, res, next) => {
     })
     connection.end()
   } else {
-    res.sendStatus(500)
+    res.send('401')
   }
 })
 

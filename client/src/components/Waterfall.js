@@ -129,17 +129,17 @@ class Waterfall extends Component {
   render() {
     this.dataChange(this.state.data)
     return (
-      <div className="clearfix">
-        <div className="col1 clearfix">
+      <div className="myclearfix">
+        <div className="col1 myclearfix">
           {!!this.state.col1.length && this.createHTML(this.state.col1)}
         </div>
-        <div className="col2 clearfix">
+        <div className="col2 myclearfix">
           {!!this.state.col2.length && this.createHTML(this.state.col2)}
         </div>
-        <div className="col3 clearfix">
+        <div className="col3 myclearfix">
           {!!this.state.col3.length && this.createHTML(this.state.col3)}
         </div>
-        <div className="col4 clearfix">
+        <div className="col4 myclearfix">
           {!!this.state.col4.length && this.createHTML(this.state.col4)}
         </div>
       </div>

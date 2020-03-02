@@ -1,11 +1,9 @@
-import axios from 'axios'
-axios.defaults.withCredentials = true
+import axios from '../utils/axios'
+import { message } from 'antd'
 
 export const types = {
   LOGIN: 'AUTH/LOGIN',
-  LOGOUT: 'AUTH/LOGOUT',
-  LOGINFAIL: 'AUTH/LOGINFAIL',
-  LOADING: 'AUTH/LOADING'
+  LOGOUT: 'AUTH/LOGOUT'
 }
 
 const initialState = {
@@ -17,7 +15,6 @@ const initialState = {
 export const actions = {
   login: obj => {
     return dispatch => {
-      dispatch({ type: types.LOADING })
       let resuser_function, resusername
       axios
         .post('http://127.0.0.1/api/login', {
@@ -36,22 +33,23 @@ export const actions = {
         })
         .catch(function(err) {
           console.log(err)
-          alert('登陆失败！')
-          dispatch({ type: types.LOGINFAIL })
+          message.error('登陆失败！')
         })
     }
   },
   logout: () => {
-    axios
-      .get('http://127.0.0.1/api/logout')
-      .then(function(response) {
-        console.log(response)
+    return dispatch => {
+      axios
+        .get('http://127.0.0.1/api/logout')
+        .then(function(response) {
+          console.log(response)
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+      dispatch({
+        type: types.LOGOUT
       })
-      .catch(function(error) {
-        console.log(error)
-      })
-    return {
-      type: types.LOGOUT
     }
   }
 }
@@ -70,18 +68,9 @@ const reducer = (state = initialState, action) => {
         ...state,
         username: null,
         userId: null,
-        user_function: 9
+        user_function: null
       }
-    case types.LOGINFAIL:
-      return {
-        ...state,
-        login_fail: 'notloading'
-      }
-    case types.LOADING:
-      return {
-        ...state,
-        login_fail: 'loading'
-      }
+
     default:
       return state
   }

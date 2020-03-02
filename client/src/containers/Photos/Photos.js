@@ -37,11 +37,20 @@ class Photos extends Component {
       <div className="photos-container">
         <div className="header-container">
           <div className="header">
+            {userfunction === 2 || userfunction === 1 ? (
+              <Link to="/photoupload">
+                <Button type="normal" className="upload-photo">
+                  上传照片
+                </Button>
+              </Link>
+            ) : (
+              ''
+            )}
             <h1>zhou_pp的照片墙</h1>
             <div className="user">
               <span>用户：</span>
               <span>{username}</span>
-              {userfunction === 0 || userfunction === 1 ? (
+              {userfunction === 2 || userfunction === 1 ? (
                 <Link to="/administer">
                   <Button type="normal" className="manage">
                     管理
