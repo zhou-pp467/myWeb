@@ -4,9 +4,6 @@ import { bindActionCreators } from 'redux'
 
 class PhotoDetail extends Component {
   render() {
-    if (RedirectToLogin) {
-      return <Redirect to="/" />
-    }
     return <div></div>
   }
 }

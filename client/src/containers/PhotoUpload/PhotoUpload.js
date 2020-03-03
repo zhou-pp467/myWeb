@@ -204,7 +204,7 @@ class PhotoUpload extends Component {
             {userfunction === 2 || userfunction === 1 ? (
               <Link to="/administer">
                 <Button type="normal" className="manage">
-                  管理
+                  管理账号
                 </Button>
               </Link>
             ) : (

@@ -32,7 +32,6 @@ class Photos extends Component {
     const {
       photos: { data = [] }
     } = this.props
-    // console.log('data' + data)
     return username ? (
       <div className="photos-container">
         <div className="header-container">
@@ -53,7 +52,7 @@ class Photos extends Component {
               {userfunction === 2 || userfunction === 1 ? (
                 <Link to="/administer">
                   <Button type="normal" className="manage">
-                    管理
+                    管理账号
                   </Button>
                 </Link>
               ) : (

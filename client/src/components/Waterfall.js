@@ -17,8 +17,8 @@ class Waterfall extends Component {
     this.clickItemHandle = this.clickItemHandle.bind(this)
   }
 
-  clickItemHandle() {
-    console.log('send')
+  clickItemHandle(id) {
+    console.log(id)
   } //发送请求跳转到照片详情
 
   createHTML(arr) {
@@ -34,7 +34,7 @@ class Waterfall extends Component {
             }}
             key={item['picture_Id']}
             title={item['picture_description']}
-            onClick={this.clickItemHandle}
+            onClick={this.clickItemHandle(item['picture_Id'])}
           />
         ))}
       </div>

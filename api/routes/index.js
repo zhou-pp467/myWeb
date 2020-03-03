@@ -10,6 +10,7 @@ let upload = multer({
     filename: function(req, file, cb) {
       let fileName =
         file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+      console.log(fileName)
       //fileName就是上传文件的文件名
       cb(null, fileName)
     }
@@ -215,7 +216,8 @@ router.post('/uploadPhoto', upload.single('file'), (req, res, next) => {
     let picture_description = req.body.picture_description
     let taken_time = req.body.taken_time
     const reg = /\\/g
-    let picture_content = req.file.path.replace(reg, '/') + req.filename
+    let picture_content = req.file.path.replace(reg, '/')
+    console.log(picture_content, 'picture_content')
     console.log(req.body)
     const sql = `insert into pictures (picture_Id,upload_time,user_name,picture_size,picture_description,taken_time,picture_content) values ('${picture_Id}','${upload_time}','${user_name}','${picture_size}','${picture_description}','${taken_time}','${picture_content}')`
     connection.query(sql, (err, result) => {
