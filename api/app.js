@@ -20,7 +20,7 @@ app.use(
       'http://172.16.0.11'
     ],
     methods: ['GET', 'POST'],
-    alloweHeaders: ['Conten-Type', 'Authorization'],
+    allowedHeaders: ['Conten-Type', 'Authorization'],
     credentials: true
   })
 )
