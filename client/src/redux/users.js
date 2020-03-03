@@ -13,7 +13,7 @@ export const actions = {
   getUsers: () => {
     return dispatch => {
       axios
-        .get('http://127.0.0.1/api/users')
+        .get('http://118.89.63.17/api/users')
         .then(res => {
           let users = res.data
           console.log(users, 'getusrsres')
@@ -27,7 +27,7 @@ export const actions = {
   addUser: (newUsername, newPassword, newFunction) => {
     return dispatch => {
       axios
-        .post('http://127.0.0.1/api/createUser', {
+        .post('http://118.89.63.17/api/createUser', {
           username: newUsername,
           password: newPassword,
           user_function: newFunction
@@ -45,7 +45,7 @@ export const actions = {
     return dispatch => {
       console.log(username)
       axios
-        .get('http://127.0.0.1/api/deleteUser', {
+        .get('http://118.89.63.17/api/deleteUser', {
           params: { username: username }
         })
         .then(res => {
@@ -61,7 +61,7 @@ export const actions = {
   changeInfo: (username, newPassword, newFunction) => {
     return dispatch => {
       axios
-        .post('http://127.0.0.1/api/changeInfo', {
+        .post('http://118.89.63.17/api/changeInfo', {
           username: username,
           password: newPassword,
           user_function: newFunction

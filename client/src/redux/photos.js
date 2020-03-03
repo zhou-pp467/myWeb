@@ -14,7 +14,7 @@ export const actions = {
     return dispatch => {
       let photos
       axios
-        .get('http://127.0.0.1/api/getPhotos')
+        .get('http://118.89.63.17/api/getPhotos')
         .then(res => {
           console.log(res)
           photos = res
@@ -29,7 +29,7 @@ export const actions = {
     return dispatch => {
       let photos
       axios
-        .post('http://127.0.0.1/api/getPhotosByDate', { dates })
+        .post('http://118.89.63.17/api/getPhotosByDate', { dates })
         .then(res => {
           photos = res
           dispatch({

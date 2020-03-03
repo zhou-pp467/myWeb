@@ -46,7 +46,7 @@ class UploadPicture extends Component {
   }
   render() {
     const uploadProps = {
-      action: 'http://127.0.0.1/api/uploadPhoto',
+      action: 'http://118.89.63.17/api/uploadPhoto',
       onChange: ({ fileList }) => {
         console.log(fileList)
         if (!fileList || fileList.length === 0) {
@@ -78,7 +78,7 @@ class UploadPicture extends Component {
           fields['taken_time'].format('YYYY-MM-DD HH:mm:ss')
         )
         axios
-          .post('http://127.0.0.1/api/uploadPhoto', formData)
+          .post('http://118.89.63.17/api/uploadPhoto', formData)
           .then(res => {
             console.log(res)
             this.onReset()
