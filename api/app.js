@@ -11,8 +11,6 @@ var indexRouter = require('./routes/index')
 var bodyParser = require('body-parser')
 
 var app = express()
-app.use(bodyParser.json({ limit: '50mb' }))
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use(
   cors({
     origin: [
@@ -25,6 +23,8 @@ app.use(
     credentials: true
   })
 )
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

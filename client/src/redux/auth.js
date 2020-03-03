@@ -17,7 +17,7 @@ export const actions = {
     return dispatch => {
       let resuser_function, resusername
       axios
-        .post('http://118.89.63.17/api/login', {
+        .post('http://118.89.63.17:80/api/login', {
           username: obj.username,
           password: obj.password
         })
@@ -40,7 +40,7 @@ export const actions = {
   logout: () => {
     return dispatch => {
       axios
-        .get('http://118.89.63.17/api/logout')
+        .get('http://118.89.63.17:80/api/logout')
         .then(function(response) {
           console.log(response)
         })
