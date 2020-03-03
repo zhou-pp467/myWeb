@@ -20,7 +20,8 @@ app.use(
       'http://172.16.0.11'
     ],
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Conten-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    maxAge: 3600,
     credentials: true
   })
 )
