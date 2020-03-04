@@ -14,10 +14,10 @@ var app = express()
 app.use(
   cors({
     origin: [
-      'http://116.237.119.145:3000',
+            'http://zhoudapeng467.com',
+      'http://118.89.63.17:80',
       'http://localhost:3000',
-      'http://127.0.0.1:3000',
-      'http://172.16.0.11'
+      'http://127.0.0.1:3000'
     ],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -39,9 +39,11 @@ app.use(
     saveUninitialized: true
   })
 )
-app.use('/api', indexRouter)
-app.use(express.static(path.join(__dirname, 'public')))
 
+app.use('/api', indexRouter)
+
+app.use(express.static( path.join(__dirname,'public')))
+app.use('/root/api/public/',express.static( path.join(__dirname,'public')))
 // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   next(createError(404))

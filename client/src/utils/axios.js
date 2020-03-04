@@ -16,11 +16,14 @@ axios.interceptors.response.use(
       message.error('登录已过期，重新登陆')
       store.dispatch({ type: types.LOGOUT })
       return Promise.reject(response)
-    } else {
-      console.log('请求失败', response.data)
-      //   alert(response.data.message)
-      return response
     }
+    if (response.data === 500 || response.data === '500') {
+      console.log('请求失败', response.data)
+      message.error('请求失败')
+      //   alert(response.data.message)
+      return Promise.reject(response)
+    }
+    return response
   },
   error => {
     //对响应数据错误做操作

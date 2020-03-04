@@ -1,11 +1,11 @@
-import express from 'express'
+var express = require('express')
 const router = express.Router()
 var multer = require('multer')
 const path = require('path')
 let upload = multer({
   storage: multer.diskStorage({
     //设置文件存储位置
-    destination: path.join(__dirname, '../public/images/'),
+    destination: path.join(__dirname, './public/images/'),
     //设置文件名称
     filename: function(req, file, cb) {
       let fileName =
