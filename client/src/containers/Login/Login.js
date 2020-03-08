@@ -13,10 +13,12 @@ class Login extends Component {
   }
   render() {
     return !this.props.username ? (
-      <div className="login-container">
-        <div className="login-form">
-          <h1>zhou_pp的个人空间</h1>
-          <LoginContent {...this.props} />
+      <div className="loginPage">
+        <div className="login-container">
+          <div className="login-form">
+            <h1>zhou_pp的个人空间</h1>
+            <LoginContent {...this.props} />
+          </div>
         </div>
       </div>
     ) : (

@@ -1,4 +1,5 @@
 import axios from '../utils/axios'
+import { store } from '../index'
 
 const initialState = {
   photos: {}
@@ -6,7 +7,8 @@ const initialState = {
 
 export const types = {
   GETPHOTOS: 'PHOTOS/GETPHOTOS',
-  GETPHOTOSBYDATE: 'PHOTOS/GETPHOTOSBYDATE'
+  GETPHOTOSBYDATE: 'PHOTOS/GETPHOTOSBYDATE',
+  DELETEPHOTO: 'PHOTOS/DELETE'
 }
 
 export const actions = {
@@ -41,6 +43,22 @@ export const actions = {
           console.log(err, 'getphotosbydate')
         })
     }
+  },
+  deletePhoto: pictureId => {
+    return dispatch => {
+      axios
+        .post('http://118.89.63.17:80/api/deletePhoto', {
+          picture_Id: pictureId
+        })
+        .then(res => {
+          console.log(res)
+          let deletedPhoto = pictureId
+          dispatch({ type: types.DELETEPHOTO, deletedPhoto })
+        })
+        .catch(err => {
+          console.log(err, 'deletePhotoerr')
+        })
+    }
   }
 }
 
@@ -56,6 +74,14 @@ const reducer = (state = initialState, action) => {
         ...state,
         photos: action.photos
       }
+    case types.DELETEPHOTO:
+      return {
+        photos: {
+          data: state.photos.data.filter((item, index, arr) => {
+            return item['picture_Id'] !== action.deletedPhoto
+          })
+        }
+      }
     default:
       return state
   }
@@ -65,4 +91,32 @@ export default reducer
 
 export const getPhotos = state => {
   return state.photos
+}
+
+export const getNextPicture = currentId => {
+  let currentIndex
+  let state = store.getState()
+  state.photos.data.forEach((item, index, arr) => {
+    if (item['picture_Id'] === currentId) {
+      currentIndex = index
+    }
+  })
+  const nextPicture =
+    currentIndex === state.photos.data.length - 1
+      ? null
+      : state.photos.data[currentIndex + 1]
+  return nextPicture
+}
+
+export const getLastPicture = currentId => {
+  let currentIndex
+  let state = store.getState()
+  state.photos.data.forEach((item, index, arr) => {
+    if (item['picture_Id'] === currentId) {
+      currentIndex = index
+    }
+  })
+  const lastPicture =
+    currentIndex === 0 ? null : state.photos.data[currentIndex - 1]
+  return lastPicture
 }

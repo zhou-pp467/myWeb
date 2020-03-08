@@ -1,0 +1,165 @@
+@import '../../../node_modules/antd/dist/antd.css';
+/* 照片详情页面 */
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+#root {
+  min-height: 100%;
+  padding-top: 1px;
+}
+.photo-detail-container {
+  width: 100%;
+  padding-bottom: 30px;
+  min-height: 100%;
+  color: #fff;
+  background-image: url(../../images/photodetail.jpg);
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  border-top: 1px solid transparent;
+}
+.photo-detail-container .header-container {
+  margin-top: -11px;
+  padding-bottom: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  min-width: 1200px;
+}
+.photo-detail-container .header .manage {
+  color: #1890ff;
+  font-weight: bold;
+  position: absolute;
+  left: 100px;
+  top: 38px;
+}
+.photo-detail-container .header {
+  margin: 0 auto;
+  width: 1200px;
+  text-align: center;
+  position: relative;
+  border-top: 1px solid #1890ff;
+}
+.photo-detail-container .header .upload-photo {
+  color: #1890ff;
+  font-weight: bold;
+  position: absolute;
+  left: 250px;
+  top: 38px;
+}
+.photo-detail-container .header h1 {
+  margin: 30px 0;
+  color: #fff;
+  font-weight: bold;
+}
+.photo-detail-container .header .user {
+  position: absolute;
+  right: 100px;
+  top: 38px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.photo-detail-container button.logout {
+  margin-left: 20px;
+  color: #1890ff;
+  font-weight: bold;
+}
+.photo-detail-container .photo-wall {
+  margin-left: 16px;
+  color: #1890ff;
+  font-weight: bold;
+}
+
+/* body */
+.photo-detail-body {
+  width: 1000px;
+  /* height: 1000px; */
+  margin: 10px auto;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  padding-top: 1px;
+  padding-bottom: 30px;
+  position: relative;
+}
+.photo-detail-body .photo-show {
+  width: 800px;
+  height: 500px;
+  background-color: rgba(0, 0, 0, 0.6);
+  margin: 12px auto 0;
+}
+.photo-detail-body .left-icon {
+  position: absolute;
+  left: 21px;
+  top: 240px;
+  cursor: pointer;
+}
+.photo-detail-body .right-icon {
+  position: absolute;
+  cursor: pointer;
+  right: 21px;
+  top: 240px;
+}
+.photo-detail-body .photo-text {
+  box-sizing: border-box;
+  padding: 20px 80px 20px 37px;
+  width: 800px;
+  min-height: 80px;
+  margin: 0 auto;
+  background-color: #fff;
+  color: #aaa;
+  font-size: 16px;
+  position: relative;
+}
+.photo-detail-body .photo-text:hover .edit-picture-info {
+  display: block;
+}
+.photo-detail-body .photo-text .photo-description {
+  margin: 0;
+}
+.photo-detail-body .photo-info {
+  position: absolute;
+  right: 28px;
+  bottom: 15px;
+  font-size: 14px;
+  color: #aaa;
+}
+.photo-detail-body .edit-picture-info {
+  font-size: 14px;
+  display: none;
+  position: absolute;
+  right: 28px;
+  top: 14px;
+}
+/* 评论部分 */
+.photo-detail-container .photo-detail-body .comment-section {
+  width: 800px;
+  margin: 20px auto 0;
+  background-color: #fff;
+  padding: 0 30px 0;
+}
+.photo-detail-container .add-comment-button {
+  float: right;
+}
+.photo-detail-container .ant-form-item {
+  margin-bottom: 8px;
+}
+.photo-detail-container .ant-list-header {
+  padding: 10px;
+}
+.photo-detail-container .ant-comment-inner {
+  padding: 10px 0 4px;
+}
+.photo-detail-container .ant-comment-content-author-name {
+  font-size: 14px;
+}
+.photo-detail-container .editor-name {
+  position: relative;
+  top: 24px;
+  left: -38px;
+  font-size: 14px;
+  color: #aaa;
+}
+.photo-detail-container .edit-textarea {
+  padding-left: 34px;
+  border-top: 1px solid #bbb;
+}

@@ -96,6 +96,7 @@ body,
   display: block;
   height: 0;
   clear: both;
+  overflow: hidden;
 }
 
 .photos-container .photo-contents p {

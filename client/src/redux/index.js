@@ -1,13 +1,13 @@
 import auth from './auth'
 import photos from './photos'
-// import comments from './comments'
+import photoDetail from './photoDetail'
 import users from './users'
 import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
   auth,
   photos,
-  //   comments,
+  photoDetail,
   users
 })
 

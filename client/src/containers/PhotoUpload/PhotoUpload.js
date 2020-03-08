@@ -104,12 +104,16 @@ class UploadPicture extends Component {
           Modal.error({
             title: '只能上传JPG、JPEG、GIF、PNG格式的图片'
           })
+          this.setState({ file: {} })
+          this.onReset()
         }
         const isLt2M = file.size / 1024 / 1024 < 2
         if (!isLt2M) {
           Modal.error({
             title: '超过2M限制 不允许上传'
           })
+          this.setState({ file: {} })
+          this.onReset()
         }
         if ((isJPG || isGIF || isPNG) && isLt2M) {
           file.fileList = []
