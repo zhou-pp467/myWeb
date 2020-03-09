@@ -12,7 +12,7 @@ export const types = {
 }
 
 export const actions = {
-  getPhotos: () => {
+  getAllPhotos: () => {
     return dispatch => {
       let photos
       axios
@@ -96,27 +96,28 @@ export const getPhotos = state => {
 export const getNextPicture = currentId => {
   let currentIndex
   let state = store.getState()
-  state.photos.data.forEach((item, index, arr) => {
+  state.photos.photos.data.forEach((item, index, arr) => {
     if (item['picture_Id'] === currentId) {
       currentIndex = index
+      console.log(currentIndex, 'currentIndex')
     }
   })
   const nextPicture =
-    currentIndex === state.photos.data.length - 1
+    currentIndex === state.photos.photos.data.length - 1
       ? null
-      : state.photos.data[currentIndex + 1]
+      : state.photos.photos.data[currentIndex + 1]
   return nextPicture
 }
 
 export const getLastPicture = currentId => {
   let currentIndex
   let state = store.getState()
-  state.photos.data.forEach((item, index, arr) => {
+  state.photos.photos.data.forEach((item, index, arr) => {
     if (item['picture_Id'] === currentId) {
       currentIndex = index
     }
   })
   const lastPicture =
-    currentIndex === 0 ? null : state.photos.data[currentIndex - 1]
+    currentIndex === 0 ? null : state.photos.photos.data[currentIndex - 1]
   return lastPicture
 }

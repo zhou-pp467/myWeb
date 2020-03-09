@@ -84,8 +84,18 @@ body {
 .photo-detail-body .photo-show {
   width: 800px;
   height: 500px;
-  background-color: rgba(0, 0, 0, 0.6);
   margin: 12px auto 0;
+  line-height: 500px;
+  text-align: center;
+  /* background: url('../../../src/images/error.jpg');
+  background-size: contain; */
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.photo-detail-body .photo-show img {
+  display: inline-block;
+}
+.photo-detail-body .photo-show:hover .deletePhotoButton {
+  display: block;
 }
 .photo-detail-body .left-icon {
   position: absolute;
@@ -99,9 +109,18 @@ body {
   right: 21px;
   top: 240px;
 }
+.photo-detail-body .description-section {
+  position: relative;
+}
+.photo-detail-body .deletePhotoButton {
+  position: absolute;
+  right: 110px;
+  top: 10px;
+  display: none;
+}
 .photo-detail-body .photo-text {
   box-sizing: border-box;
-  padding: 20px 80px 20px 37px;
+  padding: 20px 30px 20px 30px;
   width: 800px;
   min-height: 80px;
   margin: 0 auto;
@@ -117,9 +136,8 @@ body {
   margin: 0;
 }
 .photo-detail-body .photo-info {
-  position: absolute;
-  right: 28px;
-  bottom: 15px;
+  text-align: right;
+  float: right;
   font-size: 14px;
   color: #aaa;
 }

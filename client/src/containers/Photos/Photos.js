@@ -20,9 +20,11 @@ class Photos extends Component {
   logout = () => {
     this.props.logout()
   }
-
+  componentWillMount() {
+    this.props.getAllPhotos()
+  }
   componentDidMount() {
-    this.props.getPhotos()
+    this.props.getAllPhotos()
   }
 
   render() {

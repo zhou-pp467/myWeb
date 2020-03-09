@@ -8,7 +8,6 @@ const initialState = {
 }
 
 const types = {
-  DELETEPHOTO: 'PHOTO/DELETE',
   COMMENTDELETE: 'COMMENT/DELETE',
   COMMENTSGET: 'COMMENTS/GET',
   PHOTOGET: 'PHOTO/GET',
@@ -17,9 +16,14 @@ const types = {
 }
 
 export const actions = {
-  deletePhoto(photoId) {
+  deletePhoto(picture_Id) {
     return dispatch => {
-      dispatch({ type: photoTypes.DELETEPHOTO, photoId })
+      axios
+        .post('http://118.89.63.17:80/api/deletePhoto', { picture_Id })
+        .then(res => {})
+        .catch(err => {
+          console.log(err, 'deletePhotoerr')
+        })
     }
   },
   getPhotoDetail(photoId) {
@@ -104,8 +108,20 @@ export const actions = {
           picture_Id
         })
         .then(res => {
-          //   _this.getPhotoDetail(picture_Id)
           console.log(res)
+          if (res.status == 200) {
+            axios
+              .get('http://118.89.63.17:80/api/comments', {
+                params: { picture_Id }
+              })
+              .then(res => {
+                let comments = res.data
+                dispatch({ type: types.COMMENTSGET, comments })
+              })
+              .catch(err => {
+                console.log(err, 'getcommentserr')
+              })
+          }
         })
         .catch(err => {
           console.log(err, 'createcommenterr')
@@ -113,7 +129,6 @@ export const actions = {
     }
   },
   editPhotoDetail(picture_Id, picture_description) {
-    let _this = this
     return dispatch => {
       axios
         .post('http://118.89.63.17:80/api/editPhotoDetail', {
@@ -121,7 +136,7 @@ export const actions = {
           picture_description
         })
         .then(res => {
-          _this.getPhotoDetail(picture_Id)
+          //   getPhotoDetail(picture_Id)
         })
         .catch(err => {
           console.log(err, 'editphotodetailerr')

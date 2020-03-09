@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Redirect, withRouter, Link } from 'react-router-dom'
+import { getLastPicture, getNextPicture } from '../../redux/photos'
+import { errImg } from '../../images/index'
 import {
   actions as authActions,
   getUsername,
@@ -31,6 +33,7 @@ import {
   Spin
 } from 'antd'
 import moment from 'moment'
+import { actions as photoActions } from '../../redux/photos'
 
 const { TextArea } = Input
 
@@ -196,17 +199,65 @@ class App extends React.Component {
   }
 }
 class PhotoDetails extends Component {
+  state = {
+    ratio: 0
+  }
   logout = () => {
     this.props.logout()
   }
   componentDidMount() {
     this.props.getPhotoDetail(this.props.match.params.id)
     this.props.getComments(this.props.match.params.id)
+    const img = new Image()
+    img.src = this.props.currentPicture.picture_content
+    const width = img.width
+    console.log(width, 'width')
+    const height = img.height
+    console.log(height, 'height')
+    const ratio = width / height || 0
+    console.log(ratio, 'ratio')
+    this.setState({ ratio })
   }
+  handleDeletePicture(currentPicture) {
+    if (getNextPicture(currentPicture.picture_Id) !== null) {
+      let id = getNextPicture(currentPicture.picture_Id).picture_Id
+      this.props.deletePhoto(currentPicture.picture_Id)
+      this.props.history.push('/photodetail/' + id)
+      this.props.getPhotoDetail(id)
+      this.props.getAllPhotos()
+    } else {
+      this.props.deletePhoto(currentPicture.picture_Id)
+      message.warning('后面没有图片了，已回到照片墙')
+      this.props.history.push('/photos')
+    }
+  }
+  handleNextPicture(currentPicture) {
+    console.log(currentPicture, 'nextpicture')
+    if (getNextPicture(currentPicture.picture_Id) !== null) {
+      let id = getNextPicture(currentPicture.picture_Id).picture_Id
+      this.props.history.push('/photodetail/' + id)
+      this.props.getPhotoDetail(id)
+    } else {
+      message.warning('已经是最后一张了')
+      return
+    }
+  }
+  handleLastPicture(currentPicture) {
+    console.log(currentPicture, 'lastpicture')
+    if (getLastPicture(currentPicture.picture_Id) !== null) {
+      let id = getLastPicture(currentPicture.picture_Id).picture_Id
+      this.props.history.push('/photodetail/' + id)
+      this.props.getPhotoDetail(id)
+    } else {
+      message.warning('已经是第一张了')
+      return
+    }
+  }
+
   render() {
-    const { userfunction, username } = this.props
-    console.log(this.props.currentComments)
-    console.log(this.props)
+    const { userfunction, username, currentPicture } = this.props
+    const { picture_content } = currentPicture
+    console.log(picture_content, currentPicture)
     return username ? (
       <div className="photo-detail-container myclearfix">
         <div className="header-container">
@@ -252,22 +303,87 @@ class PhotoDetails extends Component {
         </div>
         <div className="photo-detail-body myclearfix">
           {/* 图片及详情 */}
-          <div>
-            <div className="photo-show"></div>
+          <div className="description-section">
+            <div
+              className="photo-show"
+              //   style={{
+              //     width: 800,
+              //     height: 500,
+              //     backgroundImage:
+              //       `${picture_content}` &&
+              //       `${picture_content}` !== undefined &&
+              //       `url(${picture_content})`,
+              //     backgroundSize: 'contain',
+              //     backgroundRepeat: 'no-repeat',
+              //     backgroundPosition: 'center',
+              //     backgroundColor: 'rgba(0,0,0,0.2)'
+              //   }}
+              //   currentPicture.picture_content
+            >
+              <img
+                src={currentPicture.picture_content}
+                alt=""
+                onError={e => {
+                  e.target.onError = null
+                  e.target.src = errImg
+                }}
+              />
+              {this.props.userfunction === 2 ? (
+                <Button
+                  type="danger"
+                  className="deletePhotoButton"
+                  onClick={() => {
+                    this.handleDeletePicture(currentPicture)
+                  }}
+                >
+                  删除照片
+                </Button>
+              ) : (
+                ''
+              )}
+            </div>
             <LeftOutlined
+              onClick={() => {
+                this.handleLastPicture(currentPicture)
+              }}
               className="left-icon"
               style={{ fontSize: 45, color: 'rgba(0, 0, 0,0.8)' }}
             />
             <RightOutlined
+              onClick={() => {
+                this.handleNextPicture(currentPicture)
+              }}
               className="right-icon"
               style={{ fontSize: 45, color: 'rgba(0, 0, 0,0.8)' }}
             />
             <div className="photo-text myclearfix">
-              <p className="photo-description">alkenfwenfa</p>
-              <span className="photo-info">asdfs</span>
-              <Button type="primary" size="small" className="edit-picture-info">
-                编辑
-              </Button>
+              <p className="photo-description">
+                照片描述：{currentPicture['picture_description']}
+              </p>
+              <span className="photo-info">
+                拍摄时间：
+                {moment(currentPicture.taken_time).format(
+                  'YYYY-MM-DD HH:mm:ss'
+                )}
+                <br />
+                上传时间：
+                {moment(currentPicture.upload_time).format(
+                  'YYYY-MM-DD HH:mm:ss'
+                )}
+                <br />
+                上传者：{currentPicture.user_name}
+              </span>
+              {this.props.userfunction === 2 ? (
+                <Button
+                  type="primary"
+                  size="small"
+                  className="edit-picture-info"
+                >
+                  编辑
+                </Button>
+              ) : (
+                ''
+              )}
             </div>
           </div>
           {/* 评论部分 */}
@@ -306,7 +422,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     ...bindActionCreators(authActions, dispatch),
-    ...bindActionCreators(photoDetailActions, dispatch)
+    ...bindActionCreators(photoDetailActions, dispatch),
+    ...bindActionCreators(photoActions, dispatch)
   }
 }
 export default withRouter(

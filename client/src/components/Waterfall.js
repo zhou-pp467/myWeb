@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { actions as photoDetailActions } from '../redux/photoDetail'
 import { Redirect, withRouter, Link } from 'react-router-dom'
-import { store } from '../index'
 
 class Waterfall extends Component {
   constructor(props) {
@@ -23,7 +22,6 @@ class Waterfall extends Component {
 
   clickItemHandle(id) {
     console.log(id)
-    // this.props.getPhotoDetail(id)
     this.props.history.push('/photodetail/' + id)
   } //发送请求跳转到照片详情
 
@@ -42,7 +40,8 @@ class Waterfall extends Component {
             title={item['picture_description']}
             onClick={e => {
               console.log(e.target.key, 'eeeeeeeee')
-              this.clickItemHandle(e.target.key)
+              //   this.clickItemHandle(e.target.key)
+              this.clickItemHandle(item.picture_Id)
             }}
           />
         ))}
