@@ -258,8 +258,7 @@ class PhotoDetails extends Component {
       this.state.description.trim()
     )
     this.setState({
-      editing: false,
-      description: this.props.currentPicture.picture_description
+      editing: false
     })
   }
   cancelEdit() {
@@ -270,6 +269,13 @@ class PhotoDetails extends Component {
   }
   handelDescriptionChange(e) {
     this.setState({ description: e.target.value })
+  }
+  componentWillReceiveProps(nextprops) {
+    if (nextprops.currentPicture !== this.props.currentPicture) {
+      this.setState({
+        description: nextprops.currentPicture.picture_description
+      })
+    }
   }
   render() {
     const { userfunction, username, currentPicture } = this.props

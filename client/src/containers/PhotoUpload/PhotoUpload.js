@@ -81,9 +81,14 @@ class UploadPicture extends Component {
           .post('http://118.89.63.17:80/api/uploadPhoto', formData)
           .then(res => {
             console.log(res)
-            this.onReset()
-            this.setState({ file: {} })
-            message.success('照片上传成功！')
+            if (res.status == 200) {
+              this.onReset()
+              this.setState({ file: {} })
+              message.success('照片上传成功！')
+            } else {
+              Promise.reject(res)
+              message.error('照片上传失败！')
+            }
           })
           .catch(err => {
             console.log(err)
