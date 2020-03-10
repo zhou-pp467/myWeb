@@ -199,24 +199,25 @@ class App extends React.Component {
   }
 }
 class PhotoDetails extends Component {
-  state = {
-    ratio: 0
+  constructor(props) {
+    super(props)
+    this.state = {
+      ratio: 0
+      //     ,
+      //   image: new Image()
+    }
   }
+
   logout = () => {
     this.props.logout()
   }
+  //   componentWillMount() {
+  //     this.state.img.src = this.props.currentPicture.picture_content
+  //     this.setState({ img })
+  //   }
   componentDidMount() {
     this.props.getPhotoDetail(this.props.match.params.id)
     this.props.getComments(this.props.match.params.id)
-    const img = new Image()
-    img.src = this.props.currentPicture.picture_content
-    const width = img.width
-    console.log(width, 'width')
-    const height = img.height
-    console.log(height, 'height')
-    const ratio = width / height || 0
-    console.log(ratio, 'ratio')
-    this.setState({ ratio })
   }
   handleDeletePicture(currentPicture) {
     if (getNextPicture(currentPicture.picture_Id) !== null) {
@@ -258,6 +259,7 @@ class PhotoDetails extends Component {
     const { userfunction, username, currentPicture } = this.props
     const { picture_content } = currentPicture
     console.log(picture_content, currentPicture)
+
     return username ? (
       <div className="photo-detail-container myclearfix">
         <div className="header-container">
@@ -304,22 +306,7 @@ class PhotoDetails extends Component {
         <div className="photo-detail-body myclearfix">
           {/* 图片及详情 */}
           <div className="description-section">
-            <div
-              className="photo-show"
-              //   style={{
-              //     width: 800,
-              //     height: 500,
-              //     backgroundImage:
-              //       `${picture_content}` &&
-              //       `${picture_content}` !== undefined &&
-              //       `url(${picture_content})`,
-              //     backgroundSize: 'contain',
-              //     backgroundRepeat: 'no-repeat',
-              //     backgroundPosition: 'center',
-              //     backgroundColor: 'rgba(0,0,0,0.2)'
-              //   }}
-              //   currentPicture.picture_content
-            >
+            <div className="photo-show">
               <img
                 src={currentPicture.picture_content}
                 alt=""
@@ -327,6 +314,7 @@ class PhotoDetails extends Component {
                   e.target.onError = null
                   e.target.src = errImg
                 }}
+                // style={ratio < 1.6 ? { width: '100 %' } : { height: '100 %' }}
               />
               {this.props.userfunction === 2 ? (
                 <Button
