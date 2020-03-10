@@ -136,7 +136,31 @@ export const actions = {
           picture_description
         })
         .then(res => {
-          //   getPhotoDetail(picture_Id)
+          if (res.status === 200) {
+            axios
+              .get('http://118.89.63.17:80/api/photoDetail', {
+                params: {
+                  pictureId: picture_Id
+                }
+              })
+              .then(res => {
+                let pictureInfo = res.data[0]
+                console.log(res)
+                console.log(pictureInfo)
+                dispatch({ type: types.PHOTOGET, pictureInfo })
+              })
+            axios
+              .get('http://118.89.63.17:80/api/comments', {
+                params: { picture_Id }
+              })
+              .then(res => {
+                let comments = res.data
+                dispatch({ type: types.COMMENTSGET, comments })
+              })
+              .catch(err => {
+                console.log(err, 'getcommentserr')
+              })
+          }
         })
         .catch(err => {
           console.log(err, 'editphotodetailerr')

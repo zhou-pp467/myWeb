@@ -22,7 +22,6 @@ import {
 } from '../../redux/photoDetail'
 import {
   Comment,
-  Avatar,
   Form,
   Button,
   List,
@@ -202,19 +201,15 @@ class PhotoDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      ratio: 0
-      //     ,
-      //   image: new Image()
+      editing: false,
+      description: this.props.currentPicture.picture_description
     }
   }
 
   logout = () => {
     this.props.logout()
   }
-  //   componentWillMount() {
-  //     this.state.img.src = this.props.currentPicture.picture_content
-  //     this.setState({ img })
-  //   }
+
   componentDidMount() {
     this.props.getPhotoDetail(this.props.match.params.id)
     this.props.getComments(this.props.match.params.id)
@@ -254,7 +249,28 @@ class PhotoDetails extends Component {
       return
     }
   }
-
+  editDescription() {
+    this.setState({ editing: true })
+  }
+  confirmEdit() {
+    this.props.editPhotoDetail(
+      this.props.currentPicture.picture_Id,
+      this.state.description.trim()
+    )
+    this.setState({
+      editing: false,
+      description: this.props.currentPicture.picture_description
+    })
+  }
+  cancelEdit() {
+    this.setState({
+      editing: false,
+      description: this.props.currentPicture.picture_description
+    })
+  }
+  handelDescriptionChange(e) {
+    this.setState({ description: e.target.value })
+  }
   render() {
     const { userfunction, username, currentPicture } = this.props
     const { picture_content } = currentPicture
@@ -314,7 +330,6 @@ class PhotoDetails extends Component {
                   e.target.onError = null
                   e.target.src = errImg
                 }}
-                // style={ratio < 1.6 ? { width: '100 %' } : { height: '100 %' }}
               />
               {this.props.userfunction === 2 ? (
                 <Button
@@ -348,6 +363,26 @@ class PhotoDetails extends Component {
               <p className="photo-description">
                 照片描述：{currentPicture['picture_description']}
               </p>
+              {this.state.editing === true ? (
+                <TextArea
+                  value={this.state.description}
+                  onChange={e => {
+                    this.handelDescriptionChange(e)
+                  }}
+                  rows={3}
+                  style={{
+                    width: 350,
+                    resize: 'none',
+                    position: 'absolute',
+                    top: 16,
+                    left: 106
+                  }}
+                >
+                  {this.state.description}
+                </TextArea>
+              ) : (
+                ''
+              )}
               <span className="photo-info">
                 拍摄时间：
                 {moment(currentPicture.taken_time).format(
@@ -361,14 +396,42 @@ class PhotoDetails extends Component {
                 <br />
                 上传者：{currentPicture.user_name}
               </span>
-              {this.props.userfunction === 2 ? (
+              {this.props.userfunction === 2 && this.state.editing === false ? (
                 <Button
                   type="primary"
                   size="small"
                   className="edit-picture-info"
+                  onClick={() => {
+                    this.editDescription()
+                  }}
                 >
                   编辑
                 </Button>
+              ) : (
+                ''
+              )}
+              {this.props.userfunction === 2 && this.state.editing === true ? (
+                <div className="buttons">
+                  <Button
+                    className="confirmBUtton"
+                    size="small"
+                    type="primary"
+                    onClick={() => {
+                      this.confirmEdit()
+                    }}
+                  >
+                    确认
+                  </Button>
+                  <Button
+                    className="cancelButton"
+                    size="small"
+                    onClick={() => {
+                      this.cancelEdit()
+                    }}
+                  >
+                    取消
+                  </Button>
+                </div>
               ) : (
                 ''
               )}

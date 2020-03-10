@@ -150,6 +150,15 @@ body {
   right: 28px;
   top: 14px;
 }
+.photo-detail-body .buttons {
+  position: absolute;
+  right: 28px;
+  top: 14px;
+}
+.photo-detail-body .buttons .cancelButton {
+  margin-left: 8px;
+}
+
 /* 评论部分 */
 .photo-detail-container .photo-detail-body .comment-section {
   width: 800px;

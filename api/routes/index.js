@@ -1,11 +1,13 @@
+var moment = require('moment')
 var express = require('express')
 const router = express.Router()
 var multer = require('multer')
 const path = require('path')
+var fs = require('fs')
 let upload = multer({
   storage: multer.diskStorage({
     //设置文件存储位置
-    destination: path.join(__dirname, './public/images/'),
+    destination: path.join(__dirname, '../public/images/'),
     //设置文件名称
     filename: function(req, file, cb) {
       let fileName =
@@ -164,10 +166,7 @@ router.post('/getPhotosByDate', (req, res, next) => {
 
 //编辑照片详情
 router.post('/editPhotoDetail', (req, res, next) => {
-  if (
-    req.session.function === 2 ||
-    req.session.username === req.body.user_name
-  ) {
+  if (req.session.userfunction === 2) {
     //连接数据库
     let mysql = require('mysql')
     let connection = mysql.createConnection({
@@ -209,7 +208,7 @@ router.post('/uploadPhoto', upload.single('file'), (req, res, next) => {
     })
     console.log(req.file)
     let picture_Id = +new Date()
-    let upload_time = new Date().toLocaleString()
+    let upload_time = moment().format('YYYY-MM-DD HH:mm:ss')
     let user_name = req.body.user_name
     let picture_size = req.file.size
     console.log(picture_size)
@@ -336,13 +335,27 @@ router.post('/deletePhoto', (req, res, next) => {
       database: 'myWeb'
     })
     let picture_Id = req.body.picture_Id
-    const sql = `delete from pictures where picture_Id = '${picture_Id}'`
-    connection.query(sql, (err, result) => {
+    const sql1 = `select picture_content from pictures where picture_Id = '${picture_Id}'`
+    const sql2 = `delete from pictures where picture_Id = '${picture_Id}'`
+    const sql3 = `delete from comments where picture_Id = '${picture_Id}'`
+    connection.query(sql1, (err, result) => {
       if (err) {
         res.send(500)
       } else {
-        let data = result
-        res.send(data)
+        let picturefile = result[0]['picture_content']
+        fs.unlinkSync(`../../.${picturefile}`)
+      }
+    })
+    connection.query(sql2, (err, result) => {
+      if (err) {
+        res.send(500)
+      }
+    })
+    connection.query(sql3, (err, result) => {
+      if (err) {
+        res.send(500)
+      } else {
+        res.send(200)
       }
     })
     connection.end()
