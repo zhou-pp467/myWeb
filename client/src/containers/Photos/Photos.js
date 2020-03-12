@@ -13,6 +13,10 @@ import './Photos.css'
 import Waterfall from '../../components/Waterfall'
 
 class Photos extends Component {
+  constructor(props) {
+    super(props)
+    // this.state = { dataNum: 4 }
+  }
   onChange = dates => {
     console.log(dates)
     this.props.getPhotosByDates(dates)
@@ -26,14 +30,20 @@ class Photos extends Component {
   componentDidMount() {
     this.props.getAllPhotos()
   }
+  //   addMore() {
+  //     if (this.state.dataNum <= this.props.data.length) {
+  //       const num = this.state.dataNum
+  //       console.log(num, 'num')
+  //       this.setState({ dataNum: num + 4 })
+  //     } else {
+  //       return
+  //     }
+  //   }
 
   render() {
     const { RangePicker } = DatePicker
     const userfunction = this.props.userfunction
     const username = this.props.username
-    const {
-      photos: { data = [] }
-    } = this.props
     return username ? (
       <div className="photos-container">
         <div className="header-container">
@@ -83,10 +93,16 @@ class Photos extends Component {
         </div>
         <div className="photos-body">
           <div className="photo-contents">
-            {!(data && data.length) ? (
+            {!(this.props.data && this.props.data.length) ? (
               <p>抱歉，没有当前时段的照片~</p>
             ) : (
-              <Waterfall data={data}></Waterfall>
+              <Waterfall
+                data={this.props.data}
+                // data={this.props.data.slice(0, this.state.dataNum)}
+                // addMore={() => {
+                //   this.addMore()
+                // }}
+              ></Waterfall>
             )}
           </div>
         </div>
@@ -101,7 +117,7 @@ const mapStateToProps = state => {
   return {
     username: getUsername(state.auth),
     userfunction: getUserFunction(state.auth),
-    photos: getPhotos(state.photos)
+    data: state.photos.photos.data
   }
 }
 

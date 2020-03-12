@@ -18,7 +18,6 @@ export const actions = {
       axios
         .get('http://118.89.63.17:80/api/getPhotos')
         .then(res => {
-          console.log(res)
           photos = res
           dispatch({ type: types.GETPHOTOS, photos: photos })
         })
@@ -33,11 +32,13 @@ export const actions = {
       axios
         .post('http://118.89.63.17:80/api/getPhotosByDate', { dates })
         .then(res => {
-          photos = res
-          dispatch({
-            type: types.GETPHOTOSBYDATE,
-            photos: photos
-          })
+          if (res.status == 200) {
+            photos = res
+            dispatch({
+              type: types.GETPHOTOSBYDATE,
+              photos: photos
+            })
+          }
         })
         .catch(err => {
           console.log(err, 'getphotosbydate')

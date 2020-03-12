@@ -182,12 +182,6 @@ export const actions = {
 }
 
 const reducer = (state = initialState, action) => {
-  console.log(
-    state,
-    'photeD---state---reducer',
-    initialState,
-    '===initialState'
-  )
   switch (action.type) {
     case types.PHOTOGET:
       return {

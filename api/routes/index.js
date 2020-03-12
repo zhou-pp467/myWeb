@@ -4,6 +4,7 @@ const router = express.Router()
 var multer = require('multer')
 const path = require('path')
 var fs = require('fs')
+var sizeOf = require('image-size')
 let upload = multer({
   storage: multer.diskStorage({
     //设置文件存储位置
@@ -92,7 +93,7 @@ router.get('/getPhotos', (req, res, next) => {
       password: '5426416zdp10467',
       database: 'myWeb'
     })
-    const sql = `SELECT picture_Id,picture_content,picture_description FROM pictures ORDER BY taken_time DESC`
+    const sql = `SELECT picture_Id,picture_content,picture_description,height FROM pictures ORDER BY taken_time DESC`
     connection.query(sql, (err, result) => {
       if (err) {
         res.send(500)
@@ -149,7 +150,7 @@ router.post('/getPhotosByDate', (req, res, next) => {
     })
     const startDate = req.body.dates[0]
     const endDate = req.body.dates[1]
-    const sql = `SELECT picture_Id,picture_content,picture_description FROM pictures where taken_time >="${startDate}" and taken_time < "${endDate}" ORDER BY taken_time DESC`
+    const sql = `SELECT picture_Id,picture_content,picture_description,height FROM pictures where taken_time >="${startDate}" and taken_time < "${endDate}" ORDER BY taken_time DESC`
     connection.query(sql, (err, result) => {
       if (err) {
         res.send(500)
@@ -211,14 +212,13 @@ router.post('/uploadPhoto', upload.single('file'), (req, res, next) => {
     let upload_time = moment().format('YYYY-MM-DD HH:mm:ss')
     let user_name = req.body.user_name
     let picture_size = req.file.size
-    console.log(picture_size)
+    let picInfo = sizeOf('/root/api/public/images/' + req.file.filename)
+    let height = (picInfo.height * 287) / picInfo.width
     let picture_description = req.body.picture_description
     let taken_time = req.body.taken_time
     const reg = /\\/g
     let picture_content = req.file.path.replace(reg, '/')
-    console.log(picture_content, 'picture_content')
-    console.log(req.body)
-    const sql = `insert into pictures (picture_Id,upload_time,user_name,picture_size,picture_description,taken_time,picture_content) values ('${picture_Id}','${upload_time}','${user_name}','${picture_size}','${picture_description}','${taken_time}','${picture_content}')`
+    const sql = `insert into pictures (picture_Id,upload_time,user_name,picture_size,picture_description,taken_time,picture_content,height) values ('${picture_Id}','${upload_time}','${user_name}','${picture_size}','${picture_description}','${taken_time}','${picture_content}','${height}')`
     connection.query(sql, (err, result) => {
       if (err) {
         console.log('queryerr', err)
