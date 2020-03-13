@@ -78,7 +78,7 @@ body,
   top: 144px;
   transform: translateX(-50%);
   overflow: auto;
-  height: 570px;
+  /* height: 570px; */
   padding-bottom: 20px;
 }
 .photos-container .photo-contents {

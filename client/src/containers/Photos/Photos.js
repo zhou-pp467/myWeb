@@ -91,7 +91,10 @@ class Photos extends Component {
             </div>
           </div>
         </div>
-        <div className="photos-body">
+        <div
+          className="photos-body"
+          style={{ height: document.documentElement.clientHeight - 152 }}
+        >
           <div className="photo-contents">
             {!(this.props.data && this.props.data.length) ? (
               <p>抱歉，没有当前时段的照片~</p>
