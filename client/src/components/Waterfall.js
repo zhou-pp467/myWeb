@@ -16,7 +16,7 @@ const io = new IntersectionObserver(
       target.src = target.dataset.src
     })
   },
-  { threshold: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] }
+  { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] }
 )
 const myrefs = React.createRef()
 class WaterfallInner extends Component {
@@ -118,7 +118,9 @@ class WaterfallInner extends Component {
     this.dataChange(this.props.data)
   }
   componentWillReceiveProps(nextprops) {
-    this.dataChange(nextprops.data)
+    if (JSON.stringify(this.props.data) !== JSON.stringify(nextprops.data)) {
+      this.dataChange(nextprops.data)
+    }
   }
 
   render() {
@@ -242,11 +244,13 @@ const onload = () => {
   })
 }
 
+WaterfallInner = withRouter(WaterfallInner)
+
 const Waterfall = props => {
   return (
     <div>
       <WaterfallInner data={props.data}></WaterfallInner>
-      <img src="" onError={onload} alt="" />
+      <img src={+new Date()} onError={onload} alt="" />
     </div>
   )
 }
