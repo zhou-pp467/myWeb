@@ -13,13 +13,11 @@ import './Photos.css'
 import Waterfall from '../../components/Waterfall'
 
 class Photos extends Component {
-  constructor(props) {
-    super(props)
-    // this.state = { dataNum: 4 }
-  }
   onChange = dates => {
-    console.log(dates)
-    this.props.getPhotosByDates(dates)
+    window.stop()
+    setTimeout(() => {
+      this.props.getPhotosByDates(dates)
+    }, 1000)
   }
   logout = () => {
     this.props.logout()
@@ -30,15 +28,9 @@ class Photos extends Component {
   componentDidMount() {
     this.props.getAllPhotos()
   }
-  //   addMore() {
-  //     if (this.state.dataNum <= this.props.data.length) {
-  //       const num = this.state.dataNum
-  //       console.log(num, 'num')
-  //       this.setState({ dataNum: num + 4 })
-  //     } else {
-  //       return
-  //     }
-  //   }
+  componentWillUnmount() {
+    window.stop()
+  }
 
   render() {
     const { RangePicker } = DatePicker
@@ -99,13 +91,7 @@ class Photos extends Component {
             {!(this.props.data && this.props.data.length) ? (
               <p>抱歉，没有当前时段的照片~</p>
             ) : (
-              <Waterfall
-                data={this.props.data}
-                // data={this.props.data.slice(0, this.state.dataNum)}
-                // addMore={() => {
-                //   this.addMore()
-                // }}
-              ></Waterfall>
+              <Waterfall data={this.props.data}></Waterfall>
             )}
           </div>
         </div>

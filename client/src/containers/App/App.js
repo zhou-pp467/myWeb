@@ -17,7 +17,7 @@ class App extends Component {
           <Route path="/photoupload" component={PhotoUpload} />
           <Route path="/administer" component={Administer} />
           <Route path="/photodetail/:id" component={PhotoDetails} />
-          {/* <Redirect from="/*" to="/" /> */}
+          <Redirect from="/*" to="/" />
         </Switch>
       </Router>
     )

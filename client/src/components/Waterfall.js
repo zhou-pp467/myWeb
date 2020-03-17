@@ -14,6 +14,7 @@ const io = new IntersectionObserver(
       }
       const { target } = item
       target.src = target.dataset.src
+      io.unobserve(target)
     })
   },
   { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] }
@@ -134,7 +135,7 @@ class WaterfallInner extends Component {
                   data-src={item['picture_content']}
                   src={loadingGif}
                   onError={e => {
-                    e.target.src = errImg
+                    e.target.src = loadingGif
                     e.target.onerror = null
                     e.target.key = item['picture_Id']
                   }}
@@ -157,7 +158,7 @@ class WaterfallInner extends Component {
                   data-src={item['picture_content']}
                   src={loadingGif}
                   onError={e => {
-                    e.target.src = errImg
+                    e.target.src = loadingGif
                     e.target.onerror = null
                     e.target.key = item['picture_Id']
                   }}
@@ -180,7 +181,7 @@ class WaterfallInner extends Component {
                   data-src={item['picture_content']}
                   src={loadingGif}
                   onError={e => {
-                    e.target.src = errImg
+                    e.target.src = loadingGif
                     e.target.onerror = null
                     e.target.key = item['picture_Id']
                   }}
@@ -203,7 +204,7 @@ class WaterfallInner extends Component {
                   data-src={item['picture_content']}
                   src={loadingGif}
                   onError={e => {
-                    e.target.src = errImg
+                    e.target.src = loadingGif
                     e.target.onerror = null
                     e.target.key = item['picture_Id']
                   }}
@@ -234,12 +235,9 @@ const mapDispatchToProps = dispatch => {
 }
 
 const onload = () => {
-  console.log(myrefs.current)
   const box = myrefs.current
   const imgs = box.querySelectorAll('img')
-  console.log(imgs)
   imgs.forEach(item => {
-    // console.log(item)
     io.observe(item)
   })
 }

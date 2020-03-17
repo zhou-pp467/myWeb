@@ -12,7 +12,8 @@ const types = {
   COMMENTSGET: 'COMMENTS/GET',
   PHOTOGET: 'PHOTO/GET',
   NEXTPHOTO: 'PHOTO/NEXT',
-  LASTPHOTO: 'PHOTO/LAST'
+  LASTPHOTO: 'PHOTO/LAST',
+  CLEAR: 'PHOTO/CLEAR'
 }
 
 export const actions = {
@@ -98,7 +99,6 @@ export const actions = {
     }
   },
   createComment({ user_name, comment_content, comment_date, picture_Id }) {
-    // let _this = this
     return dispatch => {
       axios
         .post('http://118.89.63.17:80/api/createComment', {
@@ -178,6 +178,11 @@ export const actions = {
       let last = getLastPicture(currentPictureId)
       dispatch({ type: types.LASTPHOTO, last })
     }
+  },
+  clear() {
+    return dispatch => {
+      dispatch({ type: types.CLEAR })
+    }
   }
 }
 
@@ -209,6 +214,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         currentPicture: action.last
+      }
+    case types.CLEAR:
+      return {
+        ...state,
+        currentPicture: {}
       }
     default:
       return state

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Redirect, withRouter, Link } from 'react-router-dom'
 import { getLastPicture, getNextPicture } from '../../redux/photos'
-import { errImg } from '../../images/index'
+import { errImg, loadingGif } from '../../images/index'
 import {
   actions as authActions,
   getUsername,
@@ -89,9 +89,7 @@ class App extends React.Component {
     value: ''
   }
   handleDeleteComment = e => {
-    console.log(e.currentTarget)
     const comId = e.currentTarget.id
-    console.log(comId)
     const picId = this.props.pictureId
     this.props.deleteComment(comId, picId)
   }
@@ -129,7 +127,6 @@ class App extends React.Component {
 
   render() {
     const { submitting, value } = this.state
-    console.log(this.props)
     let comments = this.props.currentComments.map((item, index, arr) => {
       return {
         author: item['user_name'],
@@ -210,9 +207,12 @@ class PhotoDetails extends Component {
     this.props.logout()
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getPhotoDetail(this.props.match.params.id)
     this.props.getComments(this.props.match.params.id)
+  }
+  componentDidMount() {
+    this.picture.src = this.props.currentPicture.picture_content
   }
   handleDeletePicture(currentPicture) {
     if (getNextPicture(currentPicture.picture_Id) !== null) {
@@ -228,7 +228,6 @@ class PhotoDetails extends Component {
     }
   }
   handleNextPicture(currentPicture) {
-    console.log(currentPicture, 'nextpicture')
     if (getNextPicture(currentPicture.picture_Id) !== null) {
       let id = getNextPicture(currentPicture.picture_Id).picture_Id
       this.props.history.push('/photodetail/' + id)
@@ -239,7 +238,6 @@ class PhotoDetails extends Component {
     }
   }
   handleLastPicture(currentPicture) {
-    console.log(currentPicture, 'lastpicture')
     if (getLastPicture(currentPicture.picture_Id) !== null) {
       let id = getLastPicture(currentPicture.picture_Id).picture_Id
       this.props.history.push('/photodetail/' + id)
@@ -271,16 +269,26 @@ class PhotoDetails extends Component {
     this.setState({ description: e.target.value })
   }
   componentWillReceiveProps(nextprops) {
+    this.picture.src = loadingGif
+    console.log('picturechanged')
     if (nextprops.currentPicture !== this.props.currentPicture) {
       this.setState({
         description: nextprops.currentPicture.picture_description
       })
     }
   }
+  componentDidUpdate(prevProps, prevState) {
+    // if (prevProps.currentPicture !== this.props.currentPicture) {
+    this.picture.src = this.props.currentPicture.picture_content
+    // }
+  }
+
+  componentWillUnmount() {
+    this.props.clear()
+  }
+
   render() {
     const { userfunction, username, currentPicture } = this.props
-    const { picture_content } = currentPicture
-    console.log(picture_content, currentPicture)
 
     return username ? (
       <div className="photo-detail-container myclearfix">
@@ -330,11 +338,12 @@ class PhotoDetails extends Component {
           <div className="description-section">
             <div className="photo-show">
               <img
-                src={currentPicture.picture_content}
+                ref={ref => (this.picture = ref)}
+                src={loadingGif}
                 alt=""
                 onError={e => {
                   e.target.onError = null
-                  e.target.src = errImg
+                  e.target.src = loadingGif
                 }}
               />
               {this.props.userfunction === 2 ? (
@@ -466,7 +475,6 @@ class PhotoDetails extends Component {
   }
 }
 const mapStateToProps = state => {
-  console.log(state, 'state=====')
   return {
     username: getUsername(state.auth),
     userfunction: getUserFunction(state.auth),
